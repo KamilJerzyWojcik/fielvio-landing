@@ -154,11 +154,19 @@
               tworzymy standard obsługi, który klient widzi, rozumie i może uznać za wart dopłaty.
             </p>
             <div class="hero-actions" aria-label="Kontakt z Fielvio">
-              <a class="button button-primary" href="mailto:kamil.wojcik@fielvio.pl">
+              <a
+                class="button button-primary"
+                href="mailto:kamil.wojcik@fielvio.pl"
+                data-desktop-href="https://www.linkedin.com/in/kamil-wojcik-net-dev/"
+              >
                 <svg class="icon" aria-hidden="true"><use href="#icon-mail" /></svg>
                 Pokaż nam proces
               </a>
-              <a class="button button-secondary" href="mailto:kamil.wojcik@fielvio.pl?subject=Pro%C5%9Bba%20o%20kontakt&body=Dzie%C5%84%20dobry%2C%0A%0Aprosz%C4%99%20o%20kontakt%20w%20sprawie%20procesu%2C%20kt%C3%B3ry%20chc%C4%99%20uporz%C4%85dkowa%C4%87.%0A%0ANumer%20telefonu%3A%20%5Btu%20wpisz%20numer%5D%0ANajlepszy%20termin%20kontaktu%3A%20%5Btu%20wpisz%20termin%5D%0A%0AKr%C3%B3tki%20opis%20procesu%3A%0A%5Btu%20wpisz%202-3%20zdania%5D%0A">
+              <a
+                class="button button-secondary"
+                href="mailto:kamil.wojcik@fielvio.pl?subject=Pro%C5%9Bba%20o%20kontakt&body=Dzie%C5%84%20dobry%2C%0A%0Aprosz%C4%99%20o%20kontakt%20w%20sprawie%20procesu%2C%20kt%C3%B3ry%20chc%C4%99%20uporz%C4%85dkowa%C4%87.%0A%0ANumer%20telefonu%3A%20%5Btu%20wpisz%20numer%5D%0ANajlepszy%20termin%20kontaktu%3A%20%5Btu%20wpisz%20termin%5D%0A%0AKr%C3%B3tki%20opis%20procesu%3A%0A%5Btu%20wpisz%202-3%20zdania%5D%0A"
+                data-desktop-href="https://www.linkedin.com/in/kamil-wojcik-net-dev/"
+              >
                 <svg class="icon" aria-hidden="true"><use href="#icon-phone" /></svg>
                 Poproś o kontakt
               </a>
@@ -407,11 +415,16 @@
             </p>
           </div>
           <div class="contact-actions" aria-label="Dane kontaktowe">
-            <a class="contact-link" href="mailto:kamil.wojcik@fielvio.pl" aria-label="Wyślij email do Kamila Wójcika">
+            <button class="contact-link contact-copy-button" type="button" data-copy-email="kamil.wojcik@fielvio.pl" aria-label="Skopiuj email Kamila Wójcika">
               <svg class="icon" aria-hidden="true"><use href="#icon-mail" /></svg>
               <span>kamil.wojcik@fielvio.pl</span>
-            </a>
-            <a class="contact-link" href="mailto:kamil.wojcik@fielvio.pl?subject=Pro%C5%9Bba%20o%20kontakt&body=Dzie%C5%84%20dobry%2C%0A%0Aprosz%C4%99%20o%20kontakt%20w%20sprawie%20procesu%2C%20kt%C3%B3ry%20chc%C4%99%20uporz%C4%85dkowa%C4%87.%0A%0ANumer%20telefonu%3A%20%5Btu%20wpisz%20numer%5D%0ANajlepszy%20termin%20kontaktu%3A%20%5Btu%20wpisz%20termin%5D%0A%0AKr%C3%B3tki%20opis%20procesu%3A%0A%5Btu%20wpisz%202-3%20zdania%5D%0A" aria-label="Poproś Kamila Wójcika o kontakt">
+            </button>
+            <a
+              class="contact-link"
+              href="mailto:kamil.wojcik@fielvio.pl?subject=Pro%C5%9Bba%20o%20kontakt&body=Dzie%C5%84%20dobry%2C%0A%0Aprosz%C4%99%20o%20kontakt%20w%20sprawie%20procesu%2C%20kt%C3%B3ry%20chc%C4%99%20uporz%C4%85dkowa%C4%87.%0A%0ANumer%20telefonu%3A%20%5Btu%20wpisz%20numer%5D%0ANajlepszy%20termin%20kontaktu%3A%20%5Btu%20wpisz%20termin%5D%0A%0AKr%C3%B3tki%20opis%20procesu%3A%0A%5Btu%20wpisz%202-3%20zdania%5D%0A"
+              data-desktop-href="https://www.linkedin.com/in/kamil-wojcik-net-dev/"
+              aria-label="Poproś Kamila Wójcika o kontakt"
+            >
               <svg class="icon" aria-hidden="true"><use href="#icon-phone" /></svg>
               <span>Poproś o kontakt</span>
             </a>
@@ -419,6 +432,7 @@
               <svg class="icon" aria-hidden="true"><use href="#icon-linkedin" /></svg>
               <span>LinkedIn: Kamil Wójcik</span>
             </a>
+            <p class="copy-feedback" aria-live="polite" data-copy-feedback></p>
           </div>
         </div>
       </section>
@@ -427,8 +441,73 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <p>© 2026 Fielvio. Cyfrowy standard procesu dla firm usługowych.</p>
-        <a href="mailto:kamil.wojcik@fielvio.pl">kamil.wojcik@fielvio.pl</a>
+        <button class="footer-copy-button" type="button" data-copy-email="kamil.wojcik@fielvio.pl">kamil.wojcik@fielvio.pl</button>
       </div>
     </footer>
+    <script>
+      (() => {
+        const desktopMedia = window.matchMedia("(min-width: 721px) and (hover: hover) and (pointer: fine)");
+        const desktopLinks = document.querySelectorAll("[data-desktop-href]");
+        const copyButtons = document.querySelectorAll("[data-copy-email]");
+        const feedback = document.querySelector("[data-copy-feedback]");
+
+        const syncContactLinks = () => {
+          desktopLinks.forEach((link) => {
+            if (!link.dataset.mobileHref) {
+              link.dataset.mobileHref = link.getAttribute("href");
+            }
+            link.setAttribute("href", desktopMedia.matches ? link.dataset.desktopHref : link.dataset.mobileHref);
+            if (desktopMedia.matches) {
+              link.setAttribute("target", "_blank");
+              link.setAttribute("rel", "noopener noreferrer");
+            } else {
+              link.removeAttribute("target");
+              link.removeAttribute("rel");
+            }
+          });
+        };
+
+        const showFeedback = (message) => {
+          if (!feedback) return;
+          feedback.textContent = message;
+          window.setTimeout(() => {
+            feedback.textContent = "";
+          }, 2200);
+        };
+
+        const fallbackCopy = (email) => {
+          const textarea = document.createElement("textarea");
+          textarea.value = email;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          textarea.select();
+          const copied = document.execCommand("copy");
+          textarea.remove();
+          return copied;
+        };
+
+        const copyEmail = async (email) => {
+          try {
+            if (navigator.clipboard) {
+              await navigator.clipboard.writeText(email);
+            } else if (!fallbackCopy(email)) {
+              throw new Error("Copy failed");
+            }
+            showFeedback("Email skopiowany do schowka.");
+          } catch {
+            showFeedback("Skopiuj email ręcznie: " + email);
+          }
+        };
+
+        copyButtons.forEach((button) => {
+          button.addEventListener("click", () => copyEmail(button.dataset.copyEmail));
+        });
+
+        syncContactLinks();
+        desktopMedia.addEventListener("change", syncContactLinks);
+      })();
+    </script>
   </body>
 </html>
