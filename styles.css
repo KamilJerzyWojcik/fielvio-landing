@@ -587,6 +587,14 @@ h3 {
   margin: 8px 0 12px;
 }
 
+.contact-note {
+  margin-top: 14px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
 .contact-actions {
   display: grid;
   gap: 12px;
