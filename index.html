@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fielvio | Cyfrowy standard procesu dla firm usługowych</title>
+    <meta
+      name="description"
+      content="Fielvio buduje i utrzymuje cyfrowe standardy procesów na styku firmy usługowej i jej klientów: mniej sporów, szybsze akceptacje i wyższa wartość usługi."
+    />
+    <meta name="theme-color" content="#f8faf7" />
+    <meta property="og:title" content="Fielvio | Cyfrowy standard procesu dla firm usługowych" />
+    <meta
+      property="og:description"
+      content="Zamieniamy chaos operacyjny w wartość dla Ciebie i Twojego klienta: cyfrowy standard procesu, który klient widzi, rozumie i może uznać za wart dopłaty."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="styles.css?v=1.1" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Fielvio",
+        "url": "https://fielvio.pl/",
+        "email": "kontakt@fielvio.pl",
+        "description": "Fielvio buduje i utrzymuje cyfrowe standardy procesów na styku firmy usługowej i jej klientów: statusy, dokumentacja zdjęciowa, protokoły, akceptacje i rozliczenia."
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Czym Fielvio różni się od zwykłego projektu IT?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Fielvio nie zaczyna od listy funkcji. Zaczyna od procesu partner-klient: gdzie dziś są maile, Excel, telefony, zdjęcia i protokoły, a potem sprawdza, czy da się z tego stworzyć cyfrowy standard dający mierzalną wartość."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Kiedy proces kwalifikuje się do Fielvio?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Proces powinien być powtarzalny, widoczny dla klienta partnera, mieć ryzyko sporów, opóźnień albo błędów oraz potencjał do KPI, płatnika i produkcyjnej wartości."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Co zyskuje klient partnera?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Klient partnera otrzymuje lepszy standard obsługi: widoczne statusy, dokumentację zdjęciową, dowody wykonania, szybsze akceptacje, protokoły i łatwiejsze rozliczenie."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Czym jest cyfrowy standard procesu?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "To uporządkowany sposób prowadzenia procesu od zlecenia do protokołu i rozliczenia, w którym statusy, zdjęcia, komentarze, akceptacje i dowody wykonania tworzą jeden cyfrowy ślad."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Przejdź do treści</a>
+
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+      <symbol id="icon-mail" viewBox="0 0 24 24">
+        <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+      </symbol>
+      <symbol id="icon-phone" viewBox="0 0 24 24">
+        <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" />
+      </symbol>
+      <symbol id="icon-camera" viewBox="0 0 24 24">
+        <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
+        <circle cx="12" cy="13" r="3" />
+      </symbol>
+      <symbol id="icon-clipboard-check" viewBox="0 0 24 24">
+        <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+        <path d="m9 14 2 2 4-4" />
+      </symbol>
+      <symbol id="icon-shield-check" viewBox="0 0 24 24">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+        <path d="m9 12 2 2 4-4" />
+      </symbol>
+      <symbol id="icon-file-check" viewBox="0 0 24 24">
+        <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+        <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+        <path d="m9 15 2 2 4-4" />
+      </symbol>
+      <symbol id="icon-handshake" viewBox="0 0 24 24">
+        <path d="m11 17 2 2a1 1 0 1 0 3-3" />
+        <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" />
+        <path d="m21 3 1 11h-2" />
+        <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
+        <path d="M3 4h8" />
+      </symbol>
+      <symbol id="icon-route" viewBox="0 0 24 24">
+        <circle cx="6" cy="19" r="3" />
+        <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" />
+        <circle cx="18" cy="5" r="3" />
+      </symbol>
+      <symbol id="icon-circle-dollar-sign" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+        <path d="M12 18V6" />
+      </symbol>
+      <symbol id="icon-arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+        <path d="m12 5 7 7-7 7" />
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path d="M20 6 9 17l-5-5" />
+      </symbol>
+    </svg>
+
+    <header class="site-header" aria-label="Główna nawigacja">
+      <div class="container header-inner">
+        <a class="brand" href="#" aria-label="Fielvio - strona główna">
+          <span class="brand-mark" aria-hidden="true">F</span>
+          <span>Fielvio</span>
+        </a>
+        <nav class="nav-links" aria-label="Sekcje landingu">
+          <a href="#problem">Problem</a>
+          <a href="#wartosc">Wartość</a>
+          <a href="#proces">Jak działamy</a>
+          <a href="#dla-kogo">Dla kogo</a>
+          <a href="#kontakt">Kontakt</a>
+        </nav>
+        <a class="header-cta" href="mailto:kontakt@fielvio.pl">Porozmawiajmy o procesie</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <h1 id="hero-title">Zamieniamy chaos operacyjny w wartość dla Ciebie i Twojego klienta</h1>
+            <p class="hero-lead">
+              Fielvio buduje i utrzymuje cyfrowe standardy procesów na styku firmy usługowej
+              i jej klientów. Z procesu, który dziś generuje spory, opóźnienia i ręczne ustalenia,
+              tworzymy standard obsługi, który klient widzi, rozumie i może uznać za wart dopłaty.
+            </p>
+            <div class="hero-actions" aria-label="Kontakt z Fielvio">
+              <a class="button button-primary" href="mailto:kontakt@fielvio.pl">
+                <svg class="icon" aria-hidden="true"><use href="#icon-mail" /></svg>
+                Pokaż nam proces
+              </a>
+              <a class="button button-secondary" href="tel:+48XXXXXXXXX">
+                <svg class="icon" aria-hidden="true"><use href="#icon-phone" /></svg>
+                Porozmawiajmy
+              </a>
+            </div>
+            <div class="hero-proof" aria-label="Najważniejsze efekty">
+              <span>Mniej sporów</span>
+              <span>Szybsze protokoły</span>
+              <span>Wyższa wartość usługi</span>
+            </div>
+          </div>
+
+          <div class="process-board" aria-label="Od rozproszonych narzędzi do cyfrowego standardu procesu">
+            <div class="board-column board-column-chaos">
+              <p class="board-label">Dziś</p>
+              <div class="stack-list" aria-label="Rozproszone narzędzia">
+                <span>Excel</span>
+                <span>maile</span>
+                <span>telefony</span>
+                <span>zdjęcia</span>
+                <span>protokoły</span>
+              </div>
+            </div>
+            <div class="board-arrow" aria-hidden="true">
+              <svg class="icon"><use href="#icon-arrow-right" /></svg>
+            </div>
+            <div class="board-column board-column-standard">
+              <p class="board-label">Cyfrowy standard</p>
+              <div class="standard-rail">
+                <div class="rail-step">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-route" /></svg>
+                  <span>Statusy</span>
+                </div>
+                <div class="rail-step">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-camera" /></svg>
+                  <span>Dowody</span>
+                </div>
+                <div class="rail-step">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-clipboard-check" /></svg>
+                  <span>Akceptacje</span>
+                </div>
+                <div class="rail-step">
+                  <svg class="icon" aria-hidden="true"><use href="#icon-file-check" /></svg>
+                  <span>Rozliczenia</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="problem" class="section section-preview" aria-labelledby="problem-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="section-label">Problem</p>
+            <h2 id="problem-title">Gdzie dziś ucieka wartość</h2>
+            <p>
+              Najdroższy chaos nie wygląda jak awaria. Często wygląda jak kolejny telefon,
+              brak zdjęcia w odpowiednim miejscu albo protokół czekający na akceptację.
+            </p>
+          </div>
+          <div class="pain-grid">
+            <article class="pain-item">
+              <svg class="icon" aria-hidden="true"><use href="#icon-shield-check" /></svg>
+              <h3>Spory bez twardych dowodów</h3>
+              <p>Gdy klient kwestionuje uszkodzenie albo wykonanie pracy, firma potrzebuje cyfrowego śladu, nie szukania zdjęć w telefonach.</p>
+            </article>
+            <article class="pain-item">
+              <svg class="icon" aria-hidden="true"><use href="#icon-camera" /></svg>
+              <h3>Zdjęcia poza procesem</h3>
+              <p>Dokumentacja żyje w folderach, załącznikach i komunikatorach, więc trudno połączyć ją z konkretnym zleceniem.</p>
+            </article>
+            <article class="pain-item">
+              <svg class="icon" aria-hidden="true"><use href="#icon-file-check" /></svg>
+              <h3>Protokoły blokują faktury</h3>
+              <p>Akceptacja klienta przeciąga się, a rozliczenie stoi, bo status, dowód i protokół nie są jednym uporządkowanym przepływem.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section standard-section" aria-labelledby="standard-title">
+        <div class="container standard-layout">
+          <div>
+            <p class="section-label">Co powstaje</p>
+            <h2 id="standard-title">Cyfrowy standard procesu od zlecenia do rozliczenia</h2>
+          </div>
+          <div class="standard-copy">
+            <p>
+              Fielvio zamienia rozproszoną koordynację w jeden sposób pracy: statusy, zdjęcia,
+              komentarze, akceptacje, protokoły i rozliczenia są prowadzone tak, żeby partner
+              i jego klient widzieli tę samą, sprawdzalną wersję procesu.
+            </p>
+            <ul class="check-list">
+              <li><svg class="icon" aria-hidden="true"><use href="#icon-check" /></svg>Jeden cyfrowy ślad wykonania zamiast szukania ustaleń po kanałach.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#icon-check" /></svg>Lepsza pozycja w sporach dzięki zdjęciom, statusom i protokołom.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#icon-check" /></svg>Standard obsługi, który klient partnera rozumie i może uznać za wart dopłaty.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="wartosc" class="section value-section" aria-labelledby="value-title">
+        <div class="container">
+          <div class="section-head section-head-narrow">
+            <p class="section-label">Wartość</p>
+            <h2 id="value-title">Z operacyjnego chaosu robimy wspólny biznes dla Ciebie i Twojego klienta</h2>
+            <p>
+              Fielvio nie porządkuje procesu tylko dla wewnętrznej wygody. Standard ma tworzyć
+              wartość dla partnera oraz dla klienta partnera.
+            </p>
+          </div>
+          <div class="value-columns">
+            <article class="value-panel">
+              <div class="panel-icon">
+                <svg class="icon" aria-hidden="true"><use href="#icon-circle-dollar-sign" /></svg>
+              </div>
+              <h3>Partner biznesowy zyskuje</h3>
+              <ul>
+                <li>kontrolę statusów bez ciągłego dopytywania zespołu,</li>
+                <li>dowody w sporach i reklamacjach,</li>
+                <li>szybsze protokoły oraz sprawniejsze fakturowanie,</li>
+                <li>wyższy standard usługi, który pomaga bronić albo podnieść cenę.</li>
+              </ul>
+            </article>
+            <article class="value-panel">
+              <div class="panel-icon">
+                <svg class="icon" aria-hidden="true"><use href="#icon-handshake" /></svg>
+              </div>
+              <h3>Klient partnera widzi</h3>
+              <ul>
+                <li>status realizacji bez chaotycznych telefonów,</li>
+                <li>dokumentację zdjęciową przypisaną do procesu,</li>
+                <li>czytelne potwierdzenia i protokoły,</li>
+                <li>mniej niejasności przy akceptacji i rozliczeniu.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="dla-kogo" class="section qualification-section" aria-labelledby="qualification-title">
+        <div class="container qualification-layout">
+          <div class="qualification-copy">
+            <p class="section-label">Selekcja</p>
+            <h2 id="qualification-title">Nie każdy proces kwalifikuje się do Fielvio</h2>
+            <p>
+              Szukamy procesów, w których cyfrowy standard może działać produkcyjnie i tworzyć
+              mierzalną wartość. Nie wchodzimy w temat tylko dlatego, że „da się coś zbudować”.
+            </p>
+          </div>
+          <div class="criteria-list" aria-label="Kryteria dobrego procesu">
+            <div class="criterion">
+              <span>01</span>
+              <p>Proces powtarza się wiele razy w miesiącu i angażuje klienta partnera.</p>
+            </div>
+            <div class="criterion">
+              <span>02</span>
+              <p>Występują spory, opóźnienia, brak dowodów, ręczne przepisywanie albo blokady rozliczeń.</p>
+            </div>
+            <div class="criterion">
+              <span>03</span>
+              <p>Da się wskazać KPI, płatnika oraz powód, dla którego wyższy standard ma wartość.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="proces" class="section process-section" aria-labelledby="process-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="section-label">Jak zaczynamy</p>
+            <h2 id="process-title">Od jednego bolącego procesu do działającego standardu</h2>
+          </div>
+          <ol class="timeline">
+            <li>
+              <span class="timeline-number">1</span>
+              <div>
+                <h3>Rozmowa o jednym procesie</h3>
+                <p>Wybieramy proces, który dziś blokuje protokoły, rozliczenia albo powoduje spory z klientami.</p>
+              </div>
+            </li>
+            <li>
+              <span class="timeline-number">2</span>
+              <div>
+                <h3>Process Value Audit</h3>
+                <p>Mapujemy narzędzia, wolumen, ryzyka, klienta partnera, KPI i potencjalnego płatnika.</p>
+              </div>
+            </li>
+            <li>
+              <span class="timeline-number">3</span>
+              <div>
+                <h3>Pilot produkcyjny</h3>
+                <p>Testujemy cyfrowy standard na ograniczonym zakresie, z konkretnymi kryteriami sukcesu.</p>
+              </div>
+            </li>
+            <li>
+              <span class="timeline-number">4</span>
+              <div>
+                <h3>Utrzymanie i rozwój wartości</h3>
+                <p>Jeśli standard działa i tworzy wartość, Fielvio utrzymuje go w produkcji i rozwija kolejne obszary tylko tam, gdzie KPI to uzasadniają.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section faq-section" aria-labelledby="faq-title">
+        <div class="container faq-layout">
+          <div>
+            <p class="section-label">FAQ</p>
+            <h2 id="faq-title">Krótko, konkretnie, bez technologicznego szumu</h2>
+          </div>
+          <div class="faq-list">
+            <article>
+              <h3>Czym Fielvio różni się od zwykłego projektu IT?</h3>
+              <p>Nie zaczynamy od listy funkcji. Zaczynamy od procesu partner-klient i sprawdzamy, czy cyfrowy standard da wartość, za którą ktoś realnie chce płacić.</p>
+            </article>
+            <article>
+              <h3>Kiedy proces ma sens?</h3>
+              <p>Gdy jest powtarzalny, widoczny dla klienta, ryzykowny operacyjnie i ma potencjał do KPI, płatnika oraz produkcyjnego użycia.</p>
+            </article>
+            <article>
+              <h3>Co zyskuje klient partnera?</h3>
+              <p>Widoczne statusy, dokumentację zdjęciową, dowody wykonania, szybsze akceptacje, protokoły i łatwiejsze rozliczenie.</p>
+            </article>
+            <article>
+              <h3>Czym jest cyfrowy standard procesu?</h3>
+              <p>To jeden sposób prowadzenia pracy od zlecenia do protokołu, w którym statusy, zdjęcia, komentarze i akceptacje tworzą cyfrowy ślad wykonania.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="kontakt" class="contact-section" aria-labelledby="contact-title">
+        <div class="container contact-panel">
+          <div>
+            <p class="section-label">Kontakt</p>
+            <h2 id="contact-title">Porozmawiajmy o jednym procesie, który dziś blokuje protokoły, rozliczenia albo powoduje spory</h2>
+            <p>
+              Napisz, jaki proces chcesz uporządkować. Wystarczy kilka zdań: gdzie dziś są maile,
+              Excel, zdjęcia, protokoły i klient po drugiej stronie.
+            </p>
+          </div>
+          <div class="contact-actions" aria-label="Dane kontaktowe">
+            <a class="contact-link" href="mailto:kontakt@fielvio.pl">
+              <svg class="icon" aria-hidden="true"><use href="#icon-mail" /></svg>
+              <span>kontakt@fielvio.pl</span>
+            </a>
+            <a class="contact-link" href="tel:+48XXXXXXXXX">
+              <svg class="icon" aria-hidden="true"><use href="#icon-phone" /></svg>
+              <span>+48 XXX XXX XXX</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© 2026 Fielvio. Cyfrowy standard procesu dla firm usługowych.</p>
+        <a href="mailto:kontakt@fielvio.pl">kontakt@fielvio.pl</a>
+      </div>
+    </footer>
+  </body>
+</html>
