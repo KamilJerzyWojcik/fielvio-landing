@@ -103,6 +103,9 @@
   .pl-cap{display:none}
   .pl-scrim{display:none}
   .pr-expand{display:none}
+  .pr-peek{display:none}
+  .pr-acts{display:flex;gap:6px;align-items:center;flex:0 0 auto}
+  #peekRestore{display:none}
 
   /* strona narracji */
   .pl-side{flex:0 0 auto;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
@@ -157,7 +160,7 @@
     .pl-side{position:absolute;left:8px;right:8px;bottom:8px;z-index:40;
       border-radius:16px;box-shadow:0 -8px 30px -10px rgba(0,0,0,.4),0 3px 14px -5px rgba(0,0,0,.3);
       background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);
-      transition:max-height .25s ease}
+      transition:max-height .25s ease,opacity .22s ease,transform .22s ease}
     .pl-side::before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:34px;height:4px;border-radius:2px;background:var(--line-2)}
     .pr-head{padding:15px 14px 6px;border-bottom:none;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
     .pr-head .hd{min-width:0;flex:1}
@@ -176,6 +179,26 @@
     /* rozwinięta: pełny opis + analiza, karta rośnie i przewija się w środku */
     .pl-side.exp{max-height:74vh}
     .pl-side.exp .pr-anlg{display:block}
+
+    /* przycisk „Pełny podgląd" w nagłówku karty */
+    .pr-peek{display:inline-flex;align-items:center;gap:5px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;color:var(--tx-dim);font-size:10.5px;font-weight:600;font-family:'IBM Plex Mono',monospace;padding:6px 9px;cursor:pointer;line-height:1;white-space:nowrap}
+    .pr-peek svg{width:13px;height:13px}
+
+    /* Odsłonięcie aplikacji: w czasie animacji „Dalej" oraz w trybie podglądu karta
+       staje się prawie przezroczysta (zostaje sam lekki cień), by pokazać całą apkę.
+       Wzorzec: interaktywne dema (Navattic/Storylane) — narracja ustępuje w czasie akcji. */
+    body.playing.revealing .pl-side,
+    body.playing.peeking .pl-side{opacity:.12;transform:translateY(10px) scale(.98);pointer-events:none;
+      backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 8px 20px -14px rgba(0,0,0,.5)}
+    body.playing.revealing .pl-scrim{display:none!important}
+
+    /* pływający przycisk powrotu do opisu (widoczny tylko w trybie podglądu) */
+    #peekRestore{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:50;
+      align-items:center;gap:7px;background:var(--brand);color:var(--brand-ink);border:none;border-radius:999px;
+      padding:11px 18px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;cursor:pointer;
+      box-shadow:0 12px 26px -8px rgba(0,0,0,.5)}
+    #peekRestore svg{width:15px;height:15px}
+    body.playing.peeking #peekRestore{display:inline-flex}
   }
 
   /* ===== TELEFON + ATOMY EKRANU ===== */
@@ -357,7 +380,10 @@
           <div class="pr-count" id="plCount">—</div>
           <div class="pr-title" id="plTitle2">—</div>
         </div>
-        <button class="pr-expand" id="btnExpand" onclick="toggleCard()">więcej ˅</button>
+        <div class="pr-acts">
+          <button class="pr-peek" id="btnPeek" onclick="togglePeek()" aria-label="Pełny podgląd — schowaj opis" title="Schowaj opis, aby zobaczyć całą aplikację"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg>Pełny podgląd</button>
+          <button class="pr-expand" id="btnExpand" onclick="toggleCard()">więcej ˅</button>
+        </div>
       </div>
       <div class="pr-scroll">
         <div class="pr-comment" id="plComment">—</div>
@@ -370,6 +396,8 @@
       </div>
     </aside>
   </div>
+
+  <button id="peekRestore" onclick="togglePeek()" aria-label="Pokaż opis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg>Pokaż opis</button>
 
   <div class="pl-done" id="plDone"></div>
 </div>
@@ -635,6 +663,13 @@ function setExpandBtn(){var b=document.getElementById('btnExpand');if(b)b.textCo
 function toggleCard(){cardExp=!cardExp;var s=document.querySelector('.pl-side');if(s)s.classList.toggle('exp',cardExp);document.body.classList.toggle('cardexp',cardExp);setExpandBtn();}
 function resetCard(){cardExp=false;var s=document.querySelector('.pl-side');if(s)s.classList.remove('exp');document.body.classList.remove('cardexp');setExpandBtn();}
 
+/* Odsłanianie apki: karta ustępuje (prawie przezroczysta, zostaje lekki cień) w czasie
+   animacji „Dalej"; oraz ręczny „Pełny podgląd" — bo bez tego nie da się schować karty. */
+function revealApp(on){document.body.classList.toggle('revealing',!!on);}
+var peeking=false;
+function setPeek(on){peeking=!!on;document.body.classList.toggle('peeking',peeking);var b=document.getElementById('btnPeek');if(b)b.classList.toggle('on',peeking);}
+function togglePeek(){setPeek(!peeking);}
+
 /* ===== PLAYER ===== */
 var STEPS=[],pi=0,curScn=null,busy=false,auto=false,autoTimer=null;
 function startScenario(id){
@@ -653,8 +688,10 @@ function goStep(i){
   resetUi(); if(s.state)for(var k in s.state)ui[k]=s.state[k];
   current=s.screen; renderPhone(); clearSpot();
   var sc=SCENARIOS[curScn],last=(pi===STEPS.length-1);
-  if(s.flash) setTimeout(function(){flash(s.flash);},250);
-  else if(last&&s.spot) setTimeout(function(){flash(s.spot);},300);
+  setPeek(false);
+  if(s.flash){ revealApp(true); setTimeout(function(){flash(s.flash);},250); setTimeout(function(){revealApp(false);},1250); }
+  else if(last&&s.spot){ revealApp(true); setTimeout(function(){flash(s.spot);},300); setTimeout(function(){revealApp(false);},1300); }
+  else { revealApp(false); }
   document.getElementById('plCount').textContent=sc.k+' · krok '+(pi+1)+' / '+STEPS.length;
   document.getElementById('plTitle2').textContent=s.title;
   document.getElementById('plComment').innerHTML=s.comment;
@@ -678,13 +715,13 @@ function updateExpandBtn(s){
 function pnext(){
   if(busy)return; var s=STEPS[pi];
   if(pi>=STEPS.length-1){ finishScenario(); return; }
-  if(s.spot){ busy=true; spotlight(s.spot); setTimeout(function(){clearSpot();goStep(pi+1);busy=false;},850); }
+  if(s.spot){ busy=true; revealApp(true); spotlight(s.spot); setTimeout(function(){clearSpot();goStep(pi+1);busy=false;},850); }
   else{ goStep(pi+1); }
 }
 function pprev(){ if(busy||pi===0)return; stopAuto(); goStep(pi-1); }
-function closeScenario(){ stopAuto(); resetCard(); document.body.classList.remove('playing'); document.getElementById('plDone').classList.remove('on'); curScn=null; if(history.replaceState) history.replaceState(null,'',location.pathname+location.search); }
+function closeScenario(){ stopAuto(); resetCard(); setPeek(false); revealApp(false); document.body.classList.remove('playing'); document.getElementById('plDone').classList.remove('on'); curScn=null; if(history.replaceState) history.replaceState(null,'',location.pathname+location.search); }
 function finishScenario(){
-  clearSpot(); stopAuto();
+  clearSpot(); stopAuto(); revealApp(false); setPeek(false);
   var order=Object.keys(SCENARIOS),idx=order.indexOf(curScn),nextId=order[idx+1];
   var next=nextId?'<button class="db p" onclick="startScenario(\''+nextId+'\')">Następny: '+SCENARIOS[nextId].k+' →</button>':'<button class="db p" onclick="closeScenario()">Wróć do listy</button>';
   document.getElementById('plDone').innerHTML='<div class="box"><div class="di">✓</div><div class="dt">Scenariusz zakończony</div><div class="dd">'+SCENARIOS[curScn].title+'</div>'+next+'<button class="db g" onclick="goStep(0)">↺ Od nowa</button><button class="db g" onclick="closeScenario()">Lista scenariuszy</button></div>';
