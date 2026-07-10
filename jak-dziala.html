@@ -99,22 +99,22 @@
 
   .pl-main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:12px;max-width:1180px;width:100%;margin:0 auto}
   .pl-stage{flex:1 1 auto;display:grid;place-items:center;overflow:hidden;min-height:0;position:relative}
-  #phoneWrap{transform-origin:center center;will-change:transform}
+  #phoneWrap{transform-origin:top left;will-change:transform}
   .pl-cap{display:none}
 
   /* strona narracji */
   .pl-side{flex:0 0 auto;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .pl-side .pr-head{flex:0 0 auto;padding:12px 15px 0}
+  .pl-side .pr-head{flex:0 0 auto;padding:12px 16px 10px;border-bottom:1px solid var(--line)}
   .pr-count{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brand)}
-  .pr-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding:9px 15px 4px;scrollbar-width:thin}
+  .pr-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding:11px 16px 4px;scrollbar-width:thin}
   .pr-scroll::-webkit-scrollbar{width:5px}
   .pr-scroll::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
-  .pr-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:var(--tx);line-height:1.25;margin-bottom:9px}
+  .pr-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:var(--tx);line-height:1.22;margin-top:5px}
   .pr-comment{font-size:13.5px;color:var(--tx-dim);line-height:1.62}
   .pr-comment b{color:var(--tx)} .pr-comment .g{color:var(--green);font-weight:600} .pr-comment .w{color:var(--brand);font-weight:600}
   .pr-anlg{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--brand);margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
   .pr-anlg:empty{display:none}
-  .pr-next{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:9px;padding:9px 11px;font-size:11.5px;color:var(--tx-dim);line-height:1.45}
+  .pr-next{flex:0 0 auto;margin:10px 16px 0;background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:9px;padding:9px 11px;font-size:11.5px;color:var(--tx-dim);line-height:1.45}
   .pr-next .lbl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);display:block;margin-bottom:3px}
   .pr-next b{color:var(--tx)}
   .pl-ctrls{flex:0 0 auto;display:flex;gap:9px;padding:11px 15px calc(11px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--surface)}
@@ -128,14 +128,16 @@
     .pl-main{flex-direction:row;gap:20px;align-items:stretch}
     .pl-stage{flex:1 1 auto}
     .pl-side{flex:0 0 400px;width:400px}
-    .pr-scroll{padding:14px 20px 6px}
+    .pr-head{padding:16px 22px 12px}
+    .pr-scroll{padding:13px 22px 6px}
+    .pr-next{margin:12px 22px 0}
     .pr-title{font-size:19px}
     .pr-comment{font-size:14.5px}
     .pl-cap{display:block;position:absolute;bottom:6px;left:0;right:0;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--tx-faint);pointer-events:none}
   }
   /* MOBILE — reel: karta komentarza jako dolny arkusz */
   @media (max-width:899px){
-    .pl-side{max-height:44vh}
+    .pl-side{max-height:46vh}
     .pr-head{padding-top:11px}
   }
 
@@ -311,13 +313,15 @@
     </div>
 
     <aside class="pl-side">
-      <div class="pr-head"><div class="pr-count" id="plCount">—</div></div>
-      <div class="pr-scroll">
+      <div class="pr-head">
+        <div class="pr-count" id="plCount">—</div>
         <div class="pr-title" id="plTitle2">—</div>
+      </div>
+      <div class="pr-scroll">
         <div class="pr-comment" id="plComment">—</div>
         <div class="pr-anlg" id="plAnlg"></div>
-        <div class="pr-next" id="plNext"></div>
       </div>
+      <div class="pr-next" id="plNext"></div>
       <div class="pl-ctrls">
         <button class="prev" id="btnPrev" onclick="pprev()">← Wstecz</button>
         <button class="next" id="btnNext" onclick="pnext()">Dalej ▸</button>
@@ -549,7 +553,10 @@ function fitPhone(){
   var stage=document.getElementById('plStage'); if(!stage||!document.body.classList.contains('playing'))return;
   var w=stage.clientWidth, h=stage.clientHeight;
   var scale=Math.min((w-8)/344,(h-8)/652,1.15); if(scale<0.4)scale=0.4;
-  document.getElementById('phoneWrap').style.transform='scale('+scale+')';
+  var wrap=document.getElementById('phoneWrap');
+  wrap.style.transform='scale('+scale+')';
+  wrap.style.width=(344*scale)+'px';
+  wrap.style.height=(652*scale)+'px';
 }
 window.addEventListener('resize',fitPhone);
 if(window.visualViewport) window.visualViewport.addEventListener('resize',fitPhone);
@@ -592,9 +599,9 @@ function goStep(i){
   pi=i;var s=STEPS[i];
   resetUi(); if(s.state)for(var k in s.state)ui[k]=s.state[k];
   current=s.screen; renderPhone(); clearSpot();
-  fitPhone();
-  if(s.flash) setTimeout(function(){flash(s.flash);},250);
   var sc=SCENARIOS[curScn],last=(pi===STEPS.length-1);
+  if(s.flash) setTimeout(function(){flash(s.flash);},250);
+  else if(last&&s.spot) setTimeout(function(){flash(s.spot);},300);
   document.getElementById('plCount').textContent=sc.k+' · krok '+(pi+1)+' / '+STEPS.length;
   document.getElementById('plTitle2').textContent=s.title;
   document.getElementById('plComment').innerHTML=s.comment;
@@ -604,6 +611,7 @@ function goStep(i){
   document.getElementById('btnPrev').disabled=(pi===0);
   document.getElementById('btnNext').textContent=last?'Zakończ ✓':'Dalej ▸';
   document.querySelector('.pr-scroll').scrollTop=0;
+  fitPhone(); requestAnimationFrame(fitPhone);
   scheduleAuto();
 }
 function pnext(){
