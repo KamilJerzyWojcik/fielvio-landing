@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#B65F23">
+<title>Fielvio — jak działa aplikacja</title>
+<meta name="description" content="Interaktywna prezentacja Fielvio: wybierz ścieżkę i klikaj Dalej. Aplikacja sama podświetla, „stuka” w miejsce i tłumaczy, co się właśnie dzieje — inaczej na komputerze, inaczej na telefonie.">
+<meta property="og:title" content="Fielvio — jak działa aplikacja">
+<meta property="og:description" content="Wybierz scenariusz i klikaj Dalej. Prowadzona prezentacja z komentarzem i animacjami.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ /* LIGHT — pod teren */
+    --ink:#EDF0F2; --surface:#FFFFFF; --surface-2:#F4F6F8; --surface-3:#E7ECEF;
+    --line:#DBE1E5; --line-2:#C4CCD2;
+    --tx:#161E24; --tx-dim:#54606A; --tx-faint:#8B959D;
+    --brand:#B65F23; --brand-ink:#FFFFFF; --brand-tint:rgba(182,95,35,.10); --brand-bd:rgba(182,95,35,.32);
+    --red:#BF3527; --red-tint:rgba(191,53,39,.09); --red-bd:rgba(191,53,39,.32);
+    --green:#237F49; --green-tint:rgba(35,127,73,.10); --green-bd:rgba(35,127,73,.32);
+    --shadow:0 18px 46px -22px rgba(24,34,44,.42); --dim:rgba(24,34,44,.34);
+    --phone-bg:linear-gradient(180deg,#FBFCFD,#EFF3F5);
+  }
+  html[data-theme="dark"]{
+    --ink:#14191D; --surface:#1B2228; --surface-2:#212A30; --surface-3:#28323A;
+    --line:#313B42; --line-2:#3E4952;
+    --tx:#ECEAE5; --tx-dim:#98A1A8; --tx-faint:#6E7881;
+    --brand:#E58B45; --brand-ink:#20130A; --brand-tint:rgba(229,139,69,.14); --brand-bd:rgba(229,139,69,.42);
+    --red:#DC6252; --red-tint:rgba(220,98,82,.13); --red-bd:rgba(220,98,82,.42);
+    --green:#4FB57E; --green-tint:rgba(79,181,126,.13); --green-bd:rgba(79,181,126,.42);
+    --shadow:0 20px 50px -18px rgba(0,0,0,.7); --dim:rgba(6,10,13,.55);
+    --phone-bg:linear-gradient(180deg,#171D22,#12171B);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  html{-webkit-text-size-adjust:100%}
+  body{background:radial-gradient(120% 50% at 50% -8%, var(--brand-tint), transparent 60%),var(--ink);
+    color:var(--tx);font-family:'Inter',system-ui,sans-serif;line-height:1.55;transition:background .3s,color .3s}
+  body.playing{overflow:hidden}
+  b{font-weight:600;color:var(--tx)}
+  a{color:inherit}
+  .mono{font-family:'IBM Plex Mono',monospace}
+
+  /* ===== HOME ===== */
+  .home{max-width:900px;margin:0 auto;padding:22px 15px 60px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px}
+  .brandmark{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--tx)}
+  .brandmark .fl{width:12px;height:16px;border-radius:2px 2px 6px 6px;background:linear-gradient(180deg,var(--brand),transparent);position:relative}
+  .brandmark .fl::after{content:"";position:absolute;inset:2px 3px 4px 3px;border-radius:1px 1px 4px 4px;background:var(--brand);opacity:.5}
+  .brandmark b{color:var(--brand)}
+  .tgl{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--tx-dim);background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px}
+  .tgl .sw{width:30px;height:16px;border-radius:9px;background:var(--surface-3);border:1px solid var(--line-2);position:relative}
+  .tgl .sw::after{content:"";position:absolute;top:1px;left:1px;width:12px;height:12px;border-radius:50%;background:var(--brand);transition:.18s}
+  html[data-theme="dark"] .tgl .sw::after{left:15px}
+
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:13px;display:flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--brand);opacity:.7}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,7vw,38px);line-height:1.08;letter-spacing:-.02em;margin-bottom:14px}
+  h1 .a{color:var(--brand)}
+  .tagline{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--tx-dim);line-height:1.65;max-width:680px}
+  .tagline b{color:var(--tx)}
+  .howrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .howrow .chip{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--tx-dim);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 11px;display:flex;align-items:center;gap:7px}
+  .howrow .chip .n{width:16px;height:16px;border-radius:50%;background:var(--brand-tint);border:1px solid var(--brand-bd);color:var(--brand);font-weight:700;display:grid;place-items:center;font-size:9px}
+
+  .pickhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:30px 0 12px;flex-wrap:wrap}
+  .pickhead .pt{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-faint)}
+  .pickhead .ph2{font-size:11px;color:var(--tx-faint)}
+  .picker{display:grid;grid-template-columns:1fr;gap:9px}
+  @media (min-width:640px){ .picker{grid-template-columns:1fr 1fr} }
+  .scard{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:12px;padding:14px 15px;cursor:pointer;transition:.14s;display:flex;flex-direction:column;gap:6px;text-align:left;font:inherit;color:inherit;width:100%}
+  .scard:hover{border-color:var(--line-2);transform:translateY(-1px);box-shadow:var(--shadow)}
+  .scard:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .scard .sh{display:flex;align-items:center;gap:9px}
+  .scard .sk{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--brand);flex:0 0 auto}
+  .scard .st{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;color:var(--tx);line-height:1.2;flex:1}
+  .scard .freq{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:5px;white-space:nowrap;background:var(--surface-3);border:1px solid var(--line-2);color:var(--tx-faint)}
+  .scard .freq.f1{background:var(--brand-tint);border-color:var(--brand-bd);color:var(--brand)}
+  .scard .sd{font-size:12px;color:var(--tx-dim);line-height:1.5}
+  .scard .run{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--brand);margin-top:2px}
+  .disc{margin-top:30px;font-size:11.5px;color:var(--tx-faint);text-align:center;line-height:1.55;max-width:660px;margin-left:auto;margin-right:auto}
+
+  /* ===== PLAYER (pełny ekran, desktop split / mobile reel) ===== */
+  #player{position:fixed;inset:0;z-index:60;background:radial-gradient(120% 50% at 50% -8%, var(--brand-tint), transparent 60%),var(--ink);display:none;flex-direction:column;
+    padding:calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 10px)}
+  body.playing #player{display:flex}
+  .pl-bar{flex:0 0 auto;display:flex;align-items:center;gap:10px;max-width:1180px;width:100%;margin:0 auto}
+  .pl-bar .pl-x{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:9px;color:var(--tx-dim);font-size:14px;padding:8px 11px;cursor:pointer;line-height:1}
+  .pl-bar .pl-id{flex:1;min-width:0;display:flex;align-items:center;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-dim);overflow:hidden}
+  .pl-bar .pl-id .sk{background:var(--brand-tint);border:1px solid var(--brand-bd);color:var(--brand);border-radius:6px;padding:3px 8px;flex:0 0 auto}
+  .pl-bar .pl-id .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pl-tools{flex:0 0 auto;display:flex;gap:8px}
+  .pl-tools button{background:var(--surface);border:1px solid var(--line);border-radius:9px;color:var(--tx-dim);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:8px 11px;cursor:pointer;display:flex;align-items:center;gap:6px}
+  .pl-tools button.on{color:var(--brand);border-color:var(--brand-bd);background:var(--brand-tint)}
+  .pl-prog{flex:0 0 auto;height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin:11px auto;max-width:1180px;width:100%}
+  .pl-prog .bar{height:100%;background:var(--brand);border-radius:3px;transition:width .3s}
+
+  .pl-main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:12px;max-width:1180px;width:100%;margin:0 auto}
+  .pl-stage{flex:1 1 auto;display:grid;place-items:center;overflow:hidden;min-height:0;position:relative}
+  #phoneWrap{transform-origin:center center;will-change:transform}
+  .pl-cap{display:none}
+
+  /* strona narracji */
+  .pl-side{flex:0 0 auto;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .pl-side .pr-head{flex:0 0 auto;padding:12px 15px 0}
+  .pr-count{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brand)}
+  .pr-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding:9px 15px 4px;scrollbar-width:thin}
+  .pr-scroll::-webkit-scrollbar{width:5px}
+  .pr-scroll::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
+  .pr-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:var(--tx);line-height:1.25;margin-bottom:9px}
+  .pr-comment{font-size:13.5px;color:var(--tx-dim);line-height:1.62}
+  .pr-comment b{color:var(--tx)} .pr-comment .g{color:var(--green);font-weight:600} .pr-comment .w{color:var(--brand);font-weight:600}
+  .pr-anlg{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--brand);margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+  .pr-anlg:empty{display:none}
+  .pr-next{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:9px;padding:9px 11px;font-size:11.5px;color:var(--tx-dim);line-height:1.45}
+  .pr-next .lbl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);display:block;margin-bottom:3px}
+  .pr-next b{color:var(--tx)}
+  .pl-ctrls{flex:0 0 auto;display:flex;gap:9px;padding:11px 15px calc(11px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--surface)}
+  .pl-ctrls button{border-radius:11px;padding:13px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;cursor:pointer;border:1px solid var(--line-2)}
+  .pl-ctrls .prev{flex:0 0 auto;background:var(--surface-2);color:var(--tx-dim);padding:13px 17px}
+  .pl-ctrls .next{flex:1;background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+  .pl-ctrls button:disabled{opacity:.35;cursor:not-allowed}
+
+  /* DESKTOP — split */
+  @media (min-width:900px){
+    .pl-main{flex-direction:row;gap:20px;align-items:stretch}
+    .pl-stage{flex:1 1 auto}
+    .pl-side{flex:0 0 400px;width:400px}
+    .pr-scroll{padding:14px 20px 6px}
+    .pr-title{font-size:19px}
+    .pr-comment{font-size:14.5px}
+    .pl-cap{display:block;position:absolute;bottom:6px;left:0;right:0;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--tx-faint);pointer-events:none}
+  }
+  /* MOBILE — reel: karta komentarza jako dolny arkusz */
+  @media (max-width:899px){
+    .pl-side{max-height:44vh}
+    .pr-head{padding-top:11px}
+  }
+
+  /* ===== TELEFON + ATOMY EKRANU ===== */
+  .phone{width:344px;height:652px;background:var(--ink);border:1px solid var(--line-2);border-radius:32px;padding:9px;box-shadow:var(--shadow);position:relative;flex:0 0 auto}
+  .phone .notch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:92px;height:5px;background:var(--surface-3);border-radius:3px;z-index:5}
+  .screen{width:100%;height:100%;background:var(--phone-bg);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+
+  #spot{position:absolute;z-index:30;border-radius:11px;border:2.5px solid var(--brand);box-shadow:0 0 0 100vmax var(--dim),0 0 18px 2px var(--brand);opacity:0;transition:opacity .2s,left .25s,top .25s,width .25s,height .25s;pointer-events:none}
+  #tapdot{position:absolute;z-index:31;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--brand);opacity:0;pointer-events:none}
+  #tapdot.tap{animation:tap .6s ease-out}
+  @keyframes tap{0%{opacity:.55;transform:scale(.3)}70%{opacity:.25;transform:scale(1.15)}100%{opacity:0;transform:scale(1.4)}}
+  .flashpop{animation:flashpop 1s ease-out}
+  @keyframes flashpop{0%{box-shadow:0 0 0 0 var(--brand-bd)}30%{box-shadow:0 0 0 4px var(--brand-tint)}100%{box-shadow:0 0 0 0 transparent}}
+  .ph-body.anim{animation:fadein .3s ease-out}
+  @keyframes fadein{from{opacity:.3;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .ph-top{padding:22px 15px 12px;border-bottom:1px solid var(--line);flex:0 0 auto;background:var(--surface)}
+  .ph-surf{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--surfc,var(--brand));margin-bottom:3px;display:flex;align-items:center;gap:6px}
+  .ph-surf .d{width:6px;height:6px;border-radius:50%;background:var(--surfc,var(--brand))}
+  .ph-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:var(--tx);line-height:1.15}
+  .ph-sub{font-size:11px;color:var(--tx-faint);margin-top:2px}
+  .ph-body{flex:1;overflow-y:auto;padding:13px 13px 16px;scrollbar-width:thin;pointer-events:none}
+  .ph-body::-webkit-scrollbar{width:5px}
+  .ph-body::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
+  .ph-nav{flex:0 0 auto;display:flex;border-top:1px solid var(--line);background:var(--surface);pointer-events:none}
+  .ph-nav button{flex:1;background:none;border:none;color:var(--tx-faint);font-family:'Inter',sans-serif;font-size:9px;font-weight:500;padding:9px 2px 11px;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .ph-nav button .ic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .ph-nav button.on{color:var(--brand)}
+
+  .heroes{display:flex;gap:9px;margin-bottom:14px}
+  .hero{flex:1;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:11px 12px}
+  .hero.pos{border-color:var(--green-bd);background:var(--green-tint)} .hero.neg{border-color:var(--red-bd);background:var(--red-tint)}
+  .hero .hv{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;line-height:1}
+  .hero.pos .hv{color:var(--green)} .hero.neg .hv{color:var(--red)}
+  .hero .hl{font-size:9.5px;color:var(--tx-dim);margin-top:5px;line-height:1.3}
+  .faintline{font-size:10.5px;color:var(--tx-faint);text-align:center;margin:-4px 0 12px;font-family:'IBM Plex Mono',monospace}
+  .seg{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:3px;margin-bottom:13px;gap:3px}
+  .seg button{flex:1;background:none;border:none;font-size:11px;font-weight:600;color:var(--tx-dim);padding:7px 4px;border-radius:6px}
+  .seg button.on{background:var(--surface);color:var(--brand);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .qh{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-faint);margin:4px 0 8px}
+  .ai{display:flex;gap:9px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--aic,var(--line));border-radius:9px;padding:10px 11px;margin-bottom:7px}
+  .ai .ad{flex:1;min-width:0}
+  .ai .at{font-size:12px;color:var(--tx);font-weight:600;line-height:1.3}
+  .ai .as{font-size:10.5px;color:var(--tx-dim);margin-top:2px;line-height:1.4}
+  .ai .ac{flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:var(--aic);border:1px solid color-mix(in srgb,var(--aic) 40%,transparent);border-radius:6px;padding:5px 7px;white-space:nowrap}
+  .ai-red{--aic:var(--red)} .ai-brand{--aic:var(--brand)} .ai-green{--aic:var(--green)}
+  .allclear{text-align:center;padding:34px 16px}
+  .allclear .ck{width:56px;height:56px;border-radius:50%;background:var(--green-tint);border:1px solid var(--green-bd);display:grid;place-items:center;margin:0 auto 14px;color:var(--green);font-size:26px}
+  .allclear .at{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:var(--tx)}
+  .allclear .as{font-size:12px;color:var(--tx-dim);line-height:1.5;max-width:220px;margin:6px auto 0}
+  .li{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+  .li:last-child{border-bottom:none}
+  .li .av{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--surface-3);border:1px solid var(--line-2);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;color:var(--tx-dim)}
+  .li .lm{flex:1;min-width:0}
+  .li .lt{font-size:12.5px;color:var(--tx);font-weight:600;line-height:1.25}
+  .li .ls{font-size:10.5px;color:var(--tx-faint);margin-top:2px}
+  .li .lr{flex:0 0 auto;text-align:right}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;padding:3px 7px;border-radius:5px;display:inline-block;white-space:nowrap}
+  .p-brand{background:var(--brand-tint);border:1px solid var(--brand-bd);color:var(--brand)}
+  .p-red{background:var(--red-tint);border:1px solid var(--red-bd);color:var(--red)}
+  .p-green{background:var(--green-tint);border:1px solid var(--green-bd);color:var(--green)}
+  .p-grey{background:var(--surface-3);border:1px solid var(--line-2);color:var(--tx-faint)}
+  .card2{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 13px;margin-bottom:9px}
+  .card2 .c2t{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:var(--tx);margin-bottom:8px}
+  .kv{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;padding:5px 0;border-top:1px solid var(--line)}
+  .kv:first-of-type{border-top:none}
+  .kv .k{color:var(--tx-faint)} .kv .v{color:var(--tx);font-weight:600;text-align:right}
+  .kv .v.brand{color:var(--brand)} .kv .v.green{color:var(--green)} .kv .v.red{color:var(--red)}
+  .bignum{text-align:center;padding:10px;border-radius:11px;border:1px solid var(--line);background:var(--surface);margin-bottom:9px}
+  .bignum .bl{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-faint)}
+  .bignum .bv{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;line-height:1.05;margin-top:5px}
+  .bignum .bv.green{color:var(--green)} .bignum .bv.red{color:var(--red)}
+  .bignum .bs{font-size:11px;color:var(--tx-dim);margin-top:6px;line-height:1.4}
+  .btn{width:100%;background:var(--brand);color:var(--brand-ink);border:none;border-radius:9px;padding:12px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;margin-top:4px}
+  .btn:disabled{opacity:.4} .btn.ghost{background:transparent;border:1px solid var(--line-2);color:var(--tx-dim)} .btn.green{background:var(--green);color:#fff} .btn.red{background:transparent;border:1px solid var(--red-bd);color:var(--red)} .btn.sm{padding:9px;font-size:12px}
+  .linkbtn{background:none;border:none;color:var(--tx-faint);font-size:11.5px;text-decoration:underline;text-underline-offset:2px;padding:8px 0;width:100%;text-align:center;cursor:pointer}
+  .field{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-bottom:8px}
+  .field .fl{font-size:9px;color:var(--tx-faint);letter-spacing:.04em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace}
+  .field .fv{font-size:12.5px;color:var(--tx);margin-top:2px;font-weight:500}
+  .field .src{font-size:8.5px;color:var(--brand);font-family:'IBM Plex Mono',monospace;margin-left:6px}
+  .banner{border-radius:9px;padding:10px 12px;margin-bottom:10px;font-size:11.5px;line-height:1.45}
+  .bn-red{background:var(--red-tint);border:1px solid var(--red-bd);color:var(--red)}
+  .bn-brand{background:var(--brand-tint);border:1px solid var(--brand-bd);color:var(--brand)}
+  .bn-green{background:var(--green-tint);border:1px solid var(--green-bd);color:var(--green)}
+  .bn-neutral{background:var(--surface-2);border:1px solid var(--line);color:var(--tx-dim)}
+  .consent{display:flex;gap:9px;align-items:flex-start;font-size:11px;color:var(--tx-dim);margin-bottom:9px;line-height:1.4}
+  .consent .b{flex:0 0 auto;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line-2);background:var(--surface);display:grid;place-items:center;color:transparent;font-size:11px;transition:.12s;margin-top:1px}
+  .consent.on .b{border-color:var(--brand);background:var(--brand);color:var(--brand-ink)}
+  .disclose{border:1px solid var(--line);border-radius:9px;margin-bottom:9px;overflow:hidden}
+  .disclose .dh{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:11.5px;color:var(--tx-dim);font-weight:600}
+  .disclose .dh .ar{color:var(--tx-faint);font-family:'IBM Plex Mono',monospace;font-size:13px}
+  .disclose .dc{padding:0 12px 11px;border-top:1px solid var(--line)}
+  .ph-hint{font-size:10px;color:var(--tx-faint);text-align:center;margin-top:10px;font-family:'IBM Plex Mono',monospace}
+
+  /* ekran „Zakończono" */
+  .pl-done{position:fixed;inset:0;background:var(--dim);display:none;place-items:center;z-index:70;padding:20px}
+  .pl-done.on{display:grid}
+  .pl-done .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 22px;max-width:340px;width:100%;text-align:center;box-shadow:var(--shadow)}
+  .pl-done .di{width:48px;height:48px;border-radius:50%;background:var(--green-tint);border:1px solid var(--green-bd);color:var(--green);display:grid;place-items:center;font-size:22px;margin:0 auto 12px}
+  .pl-done .dt{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:var(--tx)}
+  .pl-done .dd{font-size:12.5px;color:var(--tx-dim);margin:7px 0 16px;line-height:1.5}
+  .pl-done .db{width:100%;border-radius:9px;padding:12px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;cursor:pointer;border:none;margin-bottom:8px}
+  .pl-done .db.p{background:var(--brand);color:var(--brand-ink)} .pl-done .db.g{background:transparent;border:1px solid var(--line-2);color:var(--tx-dim)}
+</style>
+</head>
+<body>
+
+<!-- ===== HOME ===== -->
+<div class="home" id="home">
+  <div class="topbar">
+    <a class="brandmark" href="/" title="Fielvio.pl"><span class="fl"></span>Fiel<b>vio</b></a>
+    <button class="tgl" onclick="toggleTheme()"><span class="sw"></span><span id="themeLabel">Jasny · teren</span></button>
+  </div>
+
+  <div class="eyebrow">Zobacz, jak to działa</div>
+  <h1>Wybierz ścieżkę i klikaj <span class="a">Dalej</span>.</h1>
+  <div class="tagline">
+    To nie zrzuty ekranu — to <b>prowadzona prezentacja</b>. Wybierasz sytuację, czytasz krótki
+    komentarz <b>co zaraz zrobi „Dalej"</b>, klikasz — a aplikacja sama <b>podświetla miejsce</b>,
+    „stuka" w nie i przechodzi dalej. Na komputerze komentarz czytasz <b>obok telefonu</b>,
+    na telefonie — na <b>pełnym ekranie</b> pod podglądem. Zaczynamy od wdrożenia, potem sytuacje
+    od najczęstszych do najrzadszych.
+  </div>
+  <div class="howrow">
+    <span class="chip"><span class="n">1</span> Wybierz scenariusz</span>
+    <span class="chip"><span class="n">2</span> Czytasz „co zrobi Dalej"</span>
+    <span class="chip"><span class="n">3</span> Klik — telefon sam pokazuje</span>
+  </div>
+
+  <div class="pickhead">
+    <div class="pt">Scenariusze</div>
+    <div class="ph2">Onboarding pierwszy · dalej od najczęstszych do najrzadszych</div>
+  </div>
+  <div class="picker" id="picker"></div>
+
+  <p class="disc">Prezentacja projektowa — nie kod produkcyjny. Analogie (Moneybird, Recharge, Stripe, Skio)
+  jako wzorce, nie kopie. Liczby ilustracyjne; podział przegląd/opieka (A/B) i kwestie prawne
+  wymagają kalibracji i potwierdzenia doradców.</p>
+</div>
+
+<!-- ===== PLAYER ===== -->
+<div id="player" role="dialog" aria-modal="true">
+  <div class="pl-bar">
+    <button class="pl-x" onclick="closeScenario()" title="Zamknij (Esc)">✕</button>
+    <div class="pl-id"><span class="sk" id="plK">S1</span><span class="nm" id="plName">—</span></div>
+    <div class="pl-tools">
+      <button id="btnAuto" onclick="toggleAuto()" title="Autoprezentacja">▶ Auto</button>
+      <button onclick="toggleTheme()" id="plTheme" title="Jasny / ciemny">◐</button>
+    </div>
+  </div>
+  <div class="pl-prog"><div class="bar" id="plBar"></div></div>
+
+  <div class="pl-main">
+    <div class="pl-stage" id="plStage">
+      <div id="phoneWrap">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="ph-top">
+              <div class="ph-surf" id="phSurf"><span class="d"></span><span id="phSurfL">Wykonawca</span></div>
+              <div class="ph-title" id="phTitle">—</div>
+              <div class="ph-sub" id="phSub"></div>
+            </div>
+            <div class="ph-body" id="phBody"></div>
+            <div class="ph-nav" id="phNav"></div>
+            <div id="spot"></div>
+            <div id="tapdot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="pl-cap">Telefon jest poglądowy · steruj panelem obok</div>
+    </div>
+
+    <aside class="pl-side">
+      <div class="pr-head"><div class="pr-count" id="plCount">—</div></div>
+      <div class="pr-scroll">
+        <div class="pr-title" id="plTitle2">—</div>
+        <div class="pr-comment" id="plComment">—</div>
+        <div class="pr-anlg" id="plAnlg"></div>
+        <div class="pr-next" id="plNext"></div>
+      </div>
+      <div class="pl-ctrls">
+        <button class="prev" id="btnPrev" onclick="pprev()">← Wstecz</button>
+        <button class="next" id="btnNext" onclick="pnext()">Dalej ▸</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="pl-done" id="plDone"></div>
+</div>
+
+<script>
+/* ===== MOTYW ===== */
+function toggleTheme(){var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');var el=document.getElementById('themeLabel');if(el)el.textContent=d?'Jasny · teren':'Ciemny';document.querySelector('meta[name=theme-color]').setAttribute('content',d?'#B65F23':'#161E24');}
+
+var ICONS={pulpit:'<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.4"/><rect x="14" y="3" width="7" height="5" rx="1.4"/><rect x="14" y="12" width="7" height="9" rx="1.4"/><rect x="3" y="16" width="7" height="5" rx="1.4"/></svg>',subs:'<svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h11"/></svg>',clients:'<svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M4 20c0-3 2.4-5 5-5s5 2 5 5"/><path d="M16.5 8.5a2.5 2.5 0 100-1M20 20c0-2-1-3.5-3-4.2"/></svg>',more:'<svg class="ic" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>'};
+
+/* ===== STAN ===== */
+var ui={};
+function resetUi(){ui={intSP:true,intStripe:true,intFaktura:true,imported:true,plansOk:true,cA:false,cB:false,ss:'manage',ssCase:'refund',calcOpen:false,cycle:'mies',pulpit:'busy',guard:'ok',firstSub:false};}
+resetUi();
+var current='w-pulpit';
+
+/* ===== EKRANY ===== */
+var SCREENS={
+ 'ob-welcome':{surface:'W',nav:false,title:'Witaj w Fielvio',sub:'Zacznij w 5 minut — bez czekania na integracje.',body:function(){return ''
+   +'<div class="card2"><div class="c2t">Twoja firma</div>'+kv('Konto','Kominek-Serwis · JDG')+kv('Pion','wybierz poniżej')+'</div>'
+   +'<div class="seg"><button class="on">Pompy ciepła</button><button>Kotły</button></div>'
+   +'<div class="banner bn-neutral">Ruszasz od razu w <b>trybie ręcznym</b>. Płatności, fakturę i import z Serwis Plannera dokładasz później — nic Cię nie blokuje na starcie.</div>'
+   +'<button class="btn" id="obStart">Rozpocznij</button>';}},
+
+ 'w-clients':{surface:'W',title:'Klienci i urządzenia',sub:'Kartoteka (odczyt) · dyskretny znacznik źródła.',body:function(){
+   if(!ui.imported){return ''
+     +'<div class="allclear" style="padding:26px 12px"><div class="ck" style="background:var(--brand-tint);border-color:var(--brand-bd);color:var(--brand)">↧</div>'
+     +'<div class="at">Pusto — na razie</div><div class="as">Zaimportuj klientów, urządzenia i cykle przeglądów z Serwis Plannera jednym kliknięciem.</div></div>'
+     +'<button class="btn" id="btnImport">Importuj z Serwis Plannera</button>';}
+   return '<div id="clientList">'
+     +clientLine('KZ','Kowalski Zbigniew','Pompa Daikin','SP')
+     +clientLine('NN','Nowak Natalia','Kocioł Vaillant','SP')
+     +clientLine('ZP','Zieliński Piotr','Pompa NIBE · bez subskrypcji','SP')
+     +clientLine('WM','Wiśniewski M.','Kocioł Bosch','SP')+'</div>'
+     +'<div class="banner bn-neutral" style="margin-top:12px;font-size:11px">Jeden spójny widok. <b>Zaktualizowano przed chwilą</b> z Serwis Plannera.</div>';}},
+
+ 'w-settings':{surface:'W',title:'Ustawienia i integracje',sub:'Podłączenia + konfiguracja produktu.',body:function(){
+   var h='<div class="qh">Integracje</div>';
+   h+=intRow('rowSP','Serwis Planner', ui.intSP, 'źródło urządzeń i wykonania', null);
+   h+=intRow('rowStripe','Stripe (konto Wykonawcy)', ui.intStripe, 'pobrania · KYC (weryfikacja firmy)', 'btnStripe');
+   h+=intRow('rowFaktura','Fakturownia + KSeF', ui.intFaktura, 'inFakt / Fakturownia / wFirma', 'btnFaktura');
+   h+='<div class="qh" style="margin-top:14px">Produkt</div>';
+   h+='<div class="card2" id="planCard"><div class="c2t">Plany (do 3) · podział przegląd/opieka</div>'+kv('Podstawowy','70% / 30%')+kv('Rozszerzony','65% / 35%')+kv('Comfort','60% / 40%')+'</div>';
+   h+='<button class="btn sm" id="btnPlans">Zatwierdź plany z szablonu</button>';
+   h+='<div class="banner bn-brand" style="font-size:11px;margin-top:11px">Trudne podłączenia robimy <b>„za Ciebie" (concierge)</b>. Domyślne per pion, żeby nie zaczynać od pustej kartki.</div>';
+   return h;}},
+
+ 'w-device':{surface:'W',title:'Pompa NIBE · Zieliński',sub:'Karta urządzenia — stąd zakładasz subskrypcję.',body:function(){return ''
+   +'<div class="card2"><div class="c2t">Urządzenie</div>'+kv('Model','Pompa NIBE')+kv('Gwarancja','do 2029')+kv('Cykl przeglądu','2×/rok (z SP)')+kv('Subskrypcja','brak','red')+'</div>'
+   +'<button class="btn" id="btnPropose">Zaproponuj subskrypcję dla tego urządzenia</button>'
+   +'<div class="banner bn-brand" style="margin-top:12px;font-size:11px">Dane są z SP — nie wpisujesz ich. Po umowie z klientem tylko potwierdzasz plan i wysyłasz link.</div>';}},
+
+ 'w-new-sub':{surface:'W',title:'Nowa subskrypcja',sub:'Dane z SP — potwierdzasz i wysyłasz link.',body:function(){
+   var g='';
+   if(ui.guard==='stripe') g='<div class="banner bn-red" id="guardBox"><b>Nie można wysłać linku.</b> Pierwsze pobranie wymaga <b>Stripe (KYC)</b> i fakturowni. Podłącz je najpierw.</div>';
+   else if(ui.guard==='dup') g='<div class="banner bn-red" id="guardBox"><b>Blokada duplikatu.</b> To urządzenie ma już aktywną subskrypcję. Nie utworzymy drugiej na tę samą parę klient+urządzenie.</div>';
+   else g='<div class="banner bn-green" id="guardBox" style="font-size:11px">Stripe ✓ · Fakturownia ✓ · brak duplikatu ✓ — można wysłać.</div>';
+   var disabled = ui.guard!=='ok';
+   return ''
+   +'<div class="field"><div class="fl">Klient <span class="src">z SP</span></div><div class="fv">Zieliński Piotr</div></div>'
+   +'<div class="field"><div class="fl">Urządzenie <span class="src">z SP</span></div><div class="fv">Pompa NIBE · gwarancja do 2029</div></div>'
+   +'<div class="field"><div class="fl">Plan / cena <span class="src">szablon</span></div><div class="fv">Comfort · 49 zł / mies.</div></div>'
+   +'<div class="seg" style="margin-bottom:11px"><button class="'+(ui.cycle==='mies'?'on':'')+'">Miesięczny</button><button class="'+(ui.cycle==='rok'?'on':'')+'">Roczny</button></div>'
+   +g
+   +'<button class="btn" id="sendLinkBtn" '+(disabled?'disabled':'')+'>Wyślij klientowi link zapisu</button>';}},
+
+ 'w-pulpit':{surface:'W',title:'Pulpit',sub:'Jedyny ekran akcji — co wymaga ruchu dziś.',body:function(){
+   var h='<div class="heroes"><div class="hero pos" id="heroPos"><div class="hv">'+(ui.firstSub?'49 zł':'6 240 zł')+'</div><div class="hl">Zainkasowane w okresie</div></div>'
+     +'<div class="hero neg"><div class="hv">'+(ui.firstSub?'0 zł':'294 zł')+'</div><div class="hl">Do odzyskania</div></div></div>'
+     +'<div class="faintline">'+(ui.firstSub?'1 aktywne urządzenie · pierwsza subskrypcja żyje':'128 aktywnych urządzeń · opłata Fielvio 7 zł/urz. = 896 zł')+'</div>'
+     +'<div class="seg"><button class="'+(ui.pulpit==='busy'?'on':'')+'">Są sprawy</button><button class="'+(ui.pulpit==='clear'?'on':'')+'">Wszystko ogarnięte</button></div>';
+   if(ui.pulpit==='clear'||ui.firstSub){
+     h+='<div class="allclear"><div class="ck">✓</div><div class="at">Wszystko ogarnięte</div><div class="as">Nic nie wymaga Twojej uwagi. Faktury, pobrania i przypomnienia działają w tle.</div></div>';
+   } else {
+     h+='<div class="qh">Wymaga ruchu</div>'
+      +'<div class="ai ai-red" id="aiTermin"><div class="ad"><div class="at">Termin zagrożony</div><div class="as">Kowalski · pompa — karta odrzucona, gwarancja za 12 dni.</div></div><div class="ac">TERMIN</div></div>'
+      +'<div class="ai ai-brand" id="aiAnomalia"><div class="ad"><div class="at">Faktura — anomalia</div><div class="as">Wiśniewski — 55 zł ≠ plan 49 zł.</div></div><div class="ac">ZATWIERDŹ</div></div>'
+      +'<div class="ai ai-brand" id="aiRezyg"><div class="ad"><div class="at">Rezygnacja — do rozliczenia</div><div class="as">Lewandowska — policzone, jeden ruch.</div></div><div class="ac">ROZLICZ</div></div>';
+   }
+   return h;}},
+
+ 'w-subs':{surface:'W',title:'Subskrypcje',sub:'Lista + status, cykl, następne pobranie.',body:function(){return ''
+   +'<div style="display:flex;gap:6px;margin-bottom:11px;flex-wrap:wrap"><span class="pill p-brand">Wszystkie</span><span class="pill p-grey">Aktywne</span><span class="pill p-grey">Wstrzymane</span><span class="pill p-grey">Zaległe</span></div>'
+   +subLine('subKowalski','KZ','Kowalski','pompa · Rozszerzony · roczny','Wstrzymana','p-red')
+   +subLine('subNowak','NN','Nowak','kocioł · Podstawowy · mies.','Zaległa','p-brand')
+   +subLine('subWM','WM','Wiśniewski','kocioł · Podstawowy · mies.','Aktywna','p-green')
+   +subLine('subZielinski','ZP','Zieliński','pompa · Comfort · mies.','Aktywna','p-green')
+   +subLine('subLA','LA','Lewandowska','kocioł · Podstawowy · mies.','Rezygnacja','p-grey');}},
+
+ 'w-sub-detail':{surface:'W',title:'Kowalski · pompa',sub:'Plan Rozszerzony · cykl roczny.',body:function(){return ''
+   +'<div class="banner bn-red" id="detBanner"><b>Wstrzymana</b> — karta odrzucona. Link do aktualizacji aktywny 30–90 dni. <b>Wykonawca powiadomiony o terminie gwarancyjnym.</b></div>'
+   +'<div class="card2"><div class="c2t">Warunki</div>'+kv('Plan','Rozszerzony')+kv('Cena','560 zł / rok','brand')+kv('Cykl','Roczny (przedpłata)')+kv('Urządzenie','Pompa Daikin')+'</div>'
+   +'<div class="disclose"><div class="dh"><span>Pokaż podział ceny (przegląd/opieka)</span><span class="ar">+</span></div></div>'
+   +'<button class="btn ghost sm">Wyślij link samoobsługi</button>';}},
+
+ 'w-billing':{surface:'W',title:'Rozliczenia',sub:'Faktury wystawiają się same — tu tylko wyjątki.',body:function(){return ''
+   +'<div class="banner bn-green">Faktury po pobraniu idą <b>same</b> (treść z umowy) → e-mail. Nic tu nie musisz robić poza wyjątkami.</div>'
+   +'<div class="qh">Wymaga ruchu</div>'
+   +'<div class="card2" id="anomBox"><div class="c2t">Anomalia · Wiśniewski</div>'+kv('Z konfiguracji','49 zł')+kv('Wyliczono','55 zł','red')+kv('Różnica','+6 zł','red')+'</div>'
+   +'<button class="btn sm" id="btnApprove">Zatwierdź 49 zł (z planu)</button>'
+   +'<button class="btn ghost sm" style="margin-top:7px">Wstrzymaj i popraw</button>'
+   +'<div class="qh" style="margin-top:15px">Wystawione (auto)</div>'
+   +'<div id="invZ" class="li"><div class="lm"><div class="lt">Zieliński · e-mail</div><div class="ls">Wysłana</div></div><div class="lr"><span class="pill p-green">49 zł</span></div></div>'
+   +'<div id="invNowak" class="li"><div class="lm"><div class="lt">Nowak · windykacja</div><div class="ls">Nieopłacona · Smart Retries</div></div><div class="lr"><span class="pill p-brand">49 zł</span></div></div>';}},
+
+ 'w-cancels':{surface:'W',title:'Rozliczenie rezygnacji',sub:'Policzone. Ty tylko potwierdzasz ruch.',body:function(){
+   var s=ui.ssCase==='surcharge';
+   var h='<div class="bignum" id="bignum"><div class="bl">'+(s?'Do pobrania od klienta':'Do zwrotu klientowi')+'</div><div class="bv '+(s?'red':'green')+'">'+(s?'117 zł':'46,66 zł')+'</div><div class="bs">'+(s?'Lewandowska · kocioł · miesięczny · po przeglądzie':'Malinowski · kocioł · miesięczny · przed przeglądem')+'</div></div>';
+   h+='<div class="disclose" id="calcBox"><div class="dh"><span>Jak to policzyliśmy?</span><span class="ar">'+(ui.calcOpen?'−':'+')+'</span></div>'
+     +(ui.calcOpen?'<div class="dc">'+(s?kv('Przegląd (wykonany, m.4)','+280 zł','brand')+kv('Opieka × 7 mies.','+70 zł','green')+kv('Zapłacone','−233 zł')+kv('Wynik','DOPŁATA 117 zł','red'):kv('Przegląd (niewykonany)','0 zł')+kv('Opieka × 2 mies.','+20 zł','green')+kv('Zapłacone','−66,66 zł')+kv('Wynik','ZWROT 46,66 zł','green'))+'</div>':'')+'</div>';
+   if(s){h+='<div class="banner bn-brand" style="font-size:11px"><b>R7:</b> dopłatę pobierasz z karty na pliku; klient może odmówić → windykacja. Cykl <b>roczny</b> to ryzyko eliminuje.</div>'
+     +'<button class="btn" id="btnSettle">Pobierz dopłatę 117 zł</button>';}
+   else{h+='<button class="btn green" id="btnSettle">Wykonaj zwrot 46,66 zł</button>';}
+   h+='<div class="ph-hint" style="margin-top:10px">Ruch pieniędzy dzieje się na Stripe Wykonawcy · Fielvio poza pieniędzmi</div>';
+   return h;}},
+
+ /* KLIENT */
+ 'k-signup':{surface:'K',title:'Potwierdź subskrypcję',sub:'Twój wykonawca przygotował opiekę nad urządzeniem.',body:function(){
+   var can=ui.cA&&ui.cB;
+   return ''
+   +'<div class="banner bn-brand"><b>Kominek-Serwis</b> uzgodnił z Tobą warunki. Potwierdź i podaj kartę — <b>bez zakładania konta</b>.</div>'
+   +'<div class="card2"><div class="c2t">Co potwierdzasz</div>'+kv('Urządzenie','Pompa NIBE')+kv('Plan','Comfort')+kv('Cena','49 zł / mies.','brand')+kv('Wystawca faktury','Kominek-Serwis')+'</div>'
+   +'<div class="consent '+(ui.cA?'on':'')+'" id="cRowA"><span class="b">✓</span>Akceptuję regulamin i plan rezygnacji (zwrot/dopłata liczone od dostarczonej wartości).</div>'
+   +'<div class="consent '+(ui.cB?'on':'')+'" id="cRowB"><span class="b">✓</span>Zgoda na cykliczne obciążanie mojej karty przez Kominek-Serwis.</div>'
+   +'<div class="field"><div class="fl">Karta</div><div class="fv">•••• •••• •••• 4242</div></div>'
+   +'<button class="btn" id="btnCard" '+(can?'':'disabled')+'>'+(can?'Potwierdzam i podłączam kartę':'Zaznacz obie zgody, aby kontynuować')+'</button>'
+   +'<div class="ph-hint" style="margin-top:10px">Płatność 100% trafia do Wykonawcy · Fielvio nie dotyka Twoich pieniędzy</div>';}},
+
+ 'k-passport':{surface:'K',title:'Paszport urządzenia',sub:'Historia + dokumenty · bez logowania (magic link).',body:function(){return ''
+   +'<div class="card2"><div class="c2t">Pompa NIBE · Zieliński</div>'+kv('Subskrypcja','Aktywna · Comfort')+kv('Następny przegląd','za 2 mies.')+kv('Gwarancja','do 2029')+'</div>'
+   +'<div class="qh">Historia (append-only)</div>'
+   +'<div id="histTop" class="li"><div class="lm"><div class="lt">Przegląd wykonany</div><div class="ls">wpis z Serwis Plannera · protokół + foto</div></div><div class="lr"><span class="pill p-grey">ostatnio</span></div></div>'
+   +'<div class="li"><div class="lm"><div class="lt">Subskrypcja aktywowana</div><div class="ls">potwierdzenie warunków + karta</div></div><div class="lr"><span class="pill p-grey">start</span></div></div>'
+   +'<div class="qh" style="margin-top:14px">Dokumenty</div>'
+   +'<div class="li"><div class="lm"><div class="lt">Faktura 49 zł</div><div class="ls">e-mail</div></div><div class="lr"><span class="pill p-brand">PDF</span></div></div>'
+   +'<div class="banner bn-green" style="margin-top:12px">To Twój <b>dowód gwarancyjny/ustawowy</b>. Trzymamy go, żeby termin nigdy nie przepadł po cichu.</div>';}},
+
+ 'k-selfservice':{surface:'K',title:'Twoja subskrypcja',sub:'Zarządzaj — karta, pauza, rezygnacja.',body:function(){
+   if(ui.ss==='manage'){return ''
+     +'<div class="card2"><div class="c2t">Comfort · pompa NIBE</div>'+kv('Cena','49 zł / mies.','brand')+kv('Następne pobranie','za 12 dni')+kv('Status','Aktywna','green')+'</div>'
+     +'<button class="btn ghost sm">Zaktualizuj kartę</button>'
+     +'<button class="btn ghost sm" style="margin-top:7px">Wstrzymaj na jakiś czas</button>'
+     +'<button class="linkbtn" id="lnkCancel" style="margin-top:6px">Chcę zrezygnować</button>';}
+   if(ui.ss==='save'){return ''
+     +'<div class="banner bn-brand"><b>Zanim zrezygnujesz</b> — może pauza na 3 miesiące? Zachowasz historię i termin gwarancyjny.</div>'
+     +'<button class="btn" id="btnPause">Wstrzymaj zamiast rezygnować</button>'
+     +'<button class="btn red sm" id="btnContinueCancel" style="margin-top:9px">Kontynuuj rezygnację</button>';}
+   return ''
+     +'<div class="bignum" id="bignum"><div class="bl">Rozliczenie rezygnacji</div><div class="bv green">ZWROT 46,66 zł</div><div class="bs">Płacisz tylko za to, co dostałeś. Przegląd w tym roku niewykonany → zwracamy nadpłatę opieki.</div></div>'
+     +'<div class="disclose" id="calcBox"><div class="dh"><span>Jak to policzyliśmy?</span><span class="ar">'+(ui.calcOpen?'−':'+')+'</span></div>'+(ui.calcOpen?'<div class="dc">'+kv('Przegląd (niewykonany)','0 zł')+kv('Opieka × 2 mies.','+20 zł','green')+kv('Zapłacone','−66,66 zł')+kv('Zwrot','46,66 zł','green')+'</div>':'')+'</div>'
+     +'<button class="btn red" id="btnConfirmCancel">Potwierdź rezygnację</button>';}},
+
+ /* WYKONANIE */
+ 'x-wykonanie':{surface:'X',title:'Wykonanie przeglądu',sub:'Źródło: Serwis Planner. Bez trybu offline.',body:function(){return ''
+   +'<div class="banner bn-brand">Serwis Planner zgłosił <b>„zlecenie wykonane"</b> — Fielvio bierze dane stąd, nie zbiera ich w terenie.</div>'
+   +'<div class="qh">Co Fielvio robi po sygnale</div>'
+   +'<div id="xActions">'
+   +'<div class="ai ai-brand"><div class="ad"><div class="at">Zalicza kubełek „przegląd"</div><div class="as">Per wizyta (pompa 2×/rok → połowa kubełka).</div></div><div class="ac">A: +140 zł</div></div>'
+   +'<div class="ai ai-green"><div class="ad"><div class="at">Dopisuje wpis do paszportu</div><div class="as">Protokół + foto z SP → dowód gwarancyjny.</div></div><div class="ac">PASZPORT</div></div>'
+   +'<div class="ai ai-brand"><div class="ad"><div class="at">Ustawia kolejny termin</div><div class="as">Wg cyklu urządzenia z SP.</div></div><div class="ac">m.9</div></div></div>'
+   +'<div class="banner bn-neutral" style="margin-top:4px"><b>NIE wyzwala faktury</b> — fakturę robi <b>pobranie</b>, nie wykonanie.</div>';}}
+};
+
+/* helpery */
+function kv(k,v,cl){return '<div class="kv"><span class="k">'+k+'</span><span class="v '+(cl||'')+'">'+v+'</span></div>';}
+function subLine(id,av,n,d,st,cl){return '<div class="li" id="'+id+'"><div class="av">'+av+'</div><div class="lm"><div class="lt">'+n+'</div><div class="ls">'+d+'</div></div><div class="lr"><span class="pill '+cl+'">'+st+'</span></div></div>';}
+function clientLine(av,n,d,src){return '<div class="li"><div class="av">'+av+'</div><div class="lm"><div class="lt">'+n+'</div><div class="ls">'+d+'</div></div><div class="lr"><span class="pill '+(src==='SP'?'p-green':'p-grey')+'">'+src+'</span></div></div>';}
+function intRow(id,name,on,note,btn){
+  var status = on?'<span class="pill p-green">Połączony</span>':'<span class="pill p-red">Nie podłączony</span>';
+  var h='<div class="li" id="'+id+'"><div class="lm"><div class="lt">'+name+'</div><div class="ls">'+note+'</div></div><div class="lr">'+status+'</div></div>';
+  if(!on&&btn) h+='<button class="btn sm" id="'+btn+'" style="margin:2px 0 8px">Podłącz '+name.split(' ')[0]+'</button>';
+  return h;
+}
+
+/* nawigacja */
+var WNAV=[['w-pulpit','Pulpit','pulpit'],['w-subs','Subskrypcje','subs'],['w-clients','Klienci','clients'],['w-settings','Więcej','more']];
+var SURF={W:{l:'Wykonawca',c:'var(--brand)'},K:{l:'Klient B2C · magic link',c:'var(--green)'},X:{l:'Moment wykonania',c:'var(--tx-dim)'}};
+
+function renderPhone(){
+  var sc=SCREENS[current],meta=SURF[sc.surface];
+  document.getElementById('phSurf').style.setProperty('--surfc',meta.c);
+  document.getElementById('phSurfL').textContent=meta.l;
+  document.getElementById('phTitle').textContent=sc.title;
+  document.getElementById('phSub').textContent=sc.sub;
+  var body=document.getElementById('phBody');
+  body.innerHTML=sc.body();
+  body.classList.remove('anim'); void body.offsetWidth; body.classList.add('anim');
+  var nav=document.getElementById('phNav');
+  if(sc.surface==='W'&&sc.nav!==false){
+    var nh=''; WNAV.forEach(function(n){ nh+='<button id="nav-'+n[0]+'" class="'+(n[0]===current||(n[0]==='w-settings'&&['w-billing','w-cancels'].indexOf(current)>=0)?'on':'')+'">'+ICONS[n[2]]+'<span>'+n[1]+'</span></button>'; });
+    nav.innerHTML=nh; nav.style.display='flex';
+  } else { nav.innerHTML=''; nav.style.display='none'; }
+  body.scrollTop=0;
+}
+
+/* przewijanie TYLKO wewnątrz telefonu (świadome skali) */
+function scrollBodyToCenter(el){
+  var body=document.getElementById('phBody');
+  var br=body.getBoundingClientRect(); var scale=(br.width/body.offsetWidth)||1;
+  var er=el.getBoundingClientRect();
+  var delta=((er.top+er.height/2)-(br.top+br.height/2))/scale;
+  body.scrollTop+=delta;
+}
+function spotlight(sel){
+  var screen=document.querySelector('.screen'); var el=screen.querySelector(sel);
+  var ring=document.getElementById('spot'),dot=document.getElementById('tapdot');
+  if(!el){ring.style.opacity=0;dot.style.opacity=0;return;}
+  scrollBodyToCenter(el);
+  requestAnimationFrame(function(){
+    var sr=screen.getBoundingClientRect(); var scale=sr.width/screen.offsetWidth;
+    var er=el.getBoundingClientRect();
+    var x=(er.left-sr.left)/scale, y=(er.top-sr.top)/scale;
+    ring.style.left=(x-5)+'px';ring.style.top=(y-5)+'px';ring.style.width=(er.width/scale+10)+'px';ring.style.height=(er.height/scale+10)+'px';ring.style.opacity=1;
+    dot.style.left=(x+er.width/scale/2)+'px';dot.style.top=(y+er.height/scale/2)+'px';
+    dot.classList.remove('tap');void dot.offsetWidth;dot.classList.add('tap');
+  });
+}
+function clearSpot(){document.getElementById('spot').style.opacity=0;document.getElementById('tapdot').style.opacity=0;}
+function flash(sel){var el=document.querySelector('.screen').querySelector(sel);if(el){scrollBodyToCenter(el);el.classList.remove('flashpop');void el.offsetWidth;el.classList.add('flashpop');}}
+
+/* skalowanie telefonu do dostępnej przestrzeni (mobile + desktop) */
+function fitPhone(){
+  var stage=document.getElementById('plStage'); if(!stage||!document.body.classList.contains('playing'))return;
+  var w=stage.clientWidth, h=stage.clientHeight;
+  var scale=Math.min((w-8)/344,(h-8)/652,1.15); if(scale<0.4)scale=0.4;
+  document.getElementById('phoneWrap').style.transform='scale('+scale+')';
+}
+window.addEventListener('resize',fitPhone);
+if(window.visualViewport) window.visualViewport.addEventListener('resize',fitPhone);
+
+/* opis „co zrobi Dalej" — z celu kroku */
+function targetLabel(sel){
+  var el=document.querySelector('.screen').querySelector(sel);
+  if(!el) return '';
+  var pick=el.querySelector('.lt,.at,.c2t');
+  var t=(pick?pick.textContent:el.textContent)||'';
+  t=t.replace(/\s+/g,' ').replace(/^[✓✔\s]+/,'').trim();
+  if(t.length>44) t=t.slice(0,42).trim()+'…';
+  return t;
+}
+function renderNext(step,last){
+  var box=document.getElementById('plNext');
+  if(last){box.innerHTML='<span class="lbl">Ostatni krok</span>Klik <b>Zakończ ✓</b> — podsumowanie ścieżki.';return;}
+  if(step.spot){
+    var lbl=targetLabel(step.spot);
+    box.innerHTML='<span class="lbl">Po kliknięciu „Dalej"</span>Telefon podświetli i „stuknie": <b>'+(lbl||'wskazane miejsce')+'</b>, potem przejdzie dalej.';
+  } else {
+    box.innerHTML='<span class="lbl">Po kliknięciu „Dalej"</span>Przejście do kolejnego ekranu — <b>zobacz, co się zmieni</b>.';
+  }
+}
+
+/* ===== PLAYER ===== */
+var STEPS=[],pi=0,curScn=null,busy=false,auto=false,autoTimer=null;
+function startScenario(id){
+  if(!SCENARIOS[id])return;
+  curScn=id;STEPS=SCENARIOS[id].steps;pi=0;
+  document.body.classList.add('playing');
+  document.getElementById('plDone').classList.remove('on');
+  document.getElementById('plK').textContent=SCENARIOS[id].k;
+  document.getElementById('plName').textContent=SCENARIOS[id].title;
+  if(history.replaceState) history.replaceState(null,'','#'+id);
+  goStep(0);
+  setTimeout(fitPhone,30);
+}
+function goStep(i){
+  pi=i;var s=STEPS[i];
+  resetUi(); if(s.state)for(var k in s.state)ui[k]=s.state[k];
+  current=s.screen; renderPhone(); clearSpot();
+  fitPhone();
+  if(s.flash) setTimeout(function(){flash(s.flash);},250);
+  var sc=SCENARIOS[curScn],last=(pi===STEPS.length-1);
+  document.getElementById('plCount').textContent=sc.k+' · krok '+(pi+1)+' / '+STEPS.length;
+  document.getElementById('plTitle2').textContent=s.title;
+  document.getElementById('plComment').innerHTML=s.comment;
+  document.getElementById('plAnlg').innerHTML=s.anlg?('› '+s.anlg):'';
+  renderNext(s,last);
+  document.getElementById('plBar').style.width=Math.round((pi+1)/STEPS.length*100)+'%';
+  document.getElementById('btnPrev').disabled=(pi===0);
+  document.getElementById('btnNext').textContent=last?'Zakończ ✓':'Dalej ▸';
+  document.querySelector('.pr-scroll').scrollTop=0;
+  scheduleAuto();
+}
+function pnext(){
+  if(busy)return; var s=STEPS[pi];
+  if(pi>=STEPS.length-1){ finishScenario(); return; }
+  if(s.spot){ busy=true; spotlight(s.spot); setTimeout(function(){clearSpot();goStep(pi+1);busy=false;},850); }
+  else{ goStep(pi+1); }
+}
+function pprev(){ if(busy||pi===0)return; stopAuto(); goStep(pi-1); }
+function closeScenario(){ stopAuto(); document.body.classList.remove('playing'); document.getElementById('plDone').classList.remove('on'); curScn=null; if(history.replaceState) history.replaceState(null,'',location.pathname+location.search); }
+function finishScenario(){
+  clearSpot(); stopAuto();
+  var order=Object.keys(SCENARIOS),idx=order.indexOf(curScn),nextId=order[idx+1];
+  var next=nextId?'<button class="db p" onclick="startScenario(\''+nextId+'\')">Następny: '+SCENARIOS[nextId].k+' →</button>':'<button class="db p" onclick="closeScenario()">Wróć do listy</button>';
+  document.getElementById('plDone').innerHTML='<div class="box"><div class="di">✓</div><div class="dt">Scenariusz zakończony</div><div class="dd">'+SCENARIOS[curScn].title+'</div>'+next+'<button class="db g" onclick="goStep(0)">↺ Od nowa</button><button class="db g" onclick="closeScenario()">Lista scenariuszy</button></div>';
+  document.getElementById('plDone').classList.add('on');
+}
+
+/* autoprezentacja */
+function updateAutoBtn(){var b=document.getElementById('btnAuto');if(auto){b.textContent='⏸ Stop';b.classList.add('on');}else{b.textContent='▶ Auto';b.classList.remove('on');}}
+function toggleAuto(){auto=!auto;updateAutoBtn();if(auto)scheduleAuto();else clearTimeout(autoTimer);}
+function stopAuto(){if(auto){auto=false;updateAutoBtn();}clearTimeout(autoTimer);}
+function scheduleAuto(){clearTimeout(autoTimer);if(!auto||!curScn)return;autoTimer=setTimeout(function(){if(!auto)return;if(pi>=STEPS.length-1){stopAuto();finishScenario();return;}pnext();},3500);}
+
+document.addEventListener('keydown',function(e){ if(!document.body.classList.contains('playing'))return; if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();stopAuto();pnext();} if(e.key==='ArrowLeft'){stopAuto();pprev();} if(e.key==='Escape')closeScenario(); });
+
+/* ===== SCENARIUSZE ===== */
+var SCENARIOS={
+ s1:{k:'S1',freq:'Wdrożenie',title:'Onboarding — aż do pierwszej subskrypcji',
+   desc:'Od pustego konta do pierwszej płatnej subskrypcji: import z SP, płatności, fakturownia, plany i zapis klienta.',steps:[
+   {screen:'ob-welcome',spot:'#obStart',title:'Ruszasz w 5 minut',comment:'Zaczynasz od zera. Fielvio nie każe konfigurować sześciu rzeczy naraz — najpierw działa <b>tryb ręczny</b>, a płatności i integracje dokładasz później. Wybierasz pion (pompy ciepła albo kotły) i klikasz „Rozpocznij".'},
+   {screen:'w-clients',state:{imported:false},spot:'#btnImport',title:'Import klientów z Serwis Plannera',comment:'Zamiast wpisywać ludzi ręcznie, pobierasz ich z Serwis Plannera jednym kliknięciem — właściciele, urządzenia i <b>cykle przeglądów</b>. To jest Twoje jedyne źródło danych o urządzeniach; Fielvio sam ich nie zbiera.'},
+   {screen:'w-clients',state:{imported:true},flash:'#clientList',spot:'#nav-w-settings',title:'Dane są w środku',comment:'Gotowe — klienci i urządzenia zaciągnięte. Teraz podłączamy płatności i fakturę. Znajdziesz je w <b>„Więcej → Ustawienia"</b>. Idziemy tam.'},
+   {screen:'w-settings',state:{intStripe:false,intFaktura:false},spot:'#btnStripe',title:'Podłącz swój Stripe',comment:'Podłączasz <b>własne konto Stripe</b> — to na nie wpływają pieniądze klientów (100%, bez prowizji od bramki). Stripe wymaga <b>KYC</b>, czyli weryfikacji tożsamości firmy; bez tego nie da się pobrać pierwszej płatności.'},
+   {screen:'w-settings',state:{intStripe:true,intFaktura:false},flash:'#rowStripe',spot:'#btnFaktura',title:'Podłącz fakturownię i KSeF',comment:'Stripe połączony. Teraz fakturownia (inFakt / Fakturownia / wFirma) + <b>KSeF</b> (Krajowy System e-Faktur). Dzięki temu faktura wystawia się <b>sama po każdym pobraniu</b> — nie klikasz jej ręcznie.'},
+   {screen:'w-settings',state:{intStripe:true,intFaktura:true},flash:'#rowFaktura',spot:'#btnPlans',title:'Zatwierdź plany',comment:'Wszystko połączone. Plany masz z gotowego <b>szablonu per pion</b>: cena, VAT i podział „przegląd/opieka" (to on decyduje o zwrotach przy rezygnacji). Sprawdzasz i zatwierdzasz — nie zaczynasz od pustej kartki.',anlg:'wzór: Moneybird — sensowne domyślne'},
+   {screen:'w-device',spot:'#btnPropose',title:'Zakładasz pierwszą subskrypcję',comment:'Klient podpisał już z Tobą <b>umowę</b> — Fielvio nie sprzedaje za Ciebie. Subskrypcję zakładasz kontekstowo, z karty urządzenia. Dane są z SP, więc nic nie przepisujesz.',anlg:'wzór: Skio — zapis przez link'},
+   {screen:'w-new-sub',spot:'#sendLinkBtn',title:'Wyślij klientowi link',comment:'Potwierdzasz plan i cykl. <b>Miesięczny</b> = niższa bariera wejścia; <b>roczny</b> = lepsza ekonomia i brak ryzyka dopłat przy rezygnacji. Wysyłasz klientowi link zapisu.'},
+   {screen:'k-signup',spot:'#cRowA',title:'Klient potwierdza — zgoda 1',comment:'Klient otwiera link — <b>bez zakładania konta</b>. Najpierw zaznacza zgody. Są <b>odznaczone celowo</b>: zgodnie z RODO klient musi kliknąć sam, zgoda nie może być domyślnie zaznaczona.'},
+   {screen:'k-signup',state:{cA:true},spot:'#cRowB',title:'Zgoda 2 — cykliczne pobranie',comment:'Druga, <b>osobna</b> zgoda — na cykliczne obciążanie karty. Rozdzielamy ją od regulaminu, żeby była świadoma. Rozdzielone zgody to wymóg, nie wygoda.'},
+   {screen:'k-signup',state:{cA:true,cB:true},spot:'#btnCard',title:'Podłączenie karty',comment:'Obie zgody zaznaczone → przycisk się odblokował. Klient potwierdza i podłącza kartę. <b>Płatność w 100% trafia do Ciebie</b>; Fielvio tylko wyzwala pobrania i nigdy nie dotyka pieniędzy klienta (to trzyma nas poza PSD2).'},
+   {screen:'w-pulpit',state:{firstSub:true},flash:'#heroPos',title:'Pierwsza subskrypcja żyje',comment:'Gotowe — onboarding zakończony. Pulpit pokazuje <b>pieniądze</b>, nie liczniki urządzeń. Od teraz faktury i pobrania dzieją się same; Ty widzisz tylko to, co wymaga ruchu.'}
+ ]},
+
+ s2:{k:'S2',freq:'Codziennie',title:'Pobranie cykliczne → faktura',
+   desc:'Rutyna, która napędza przychód: pobranie karty i faktura, która wystawia się sama.',steps:[
+   {screen:'w-subs',spot:'#subWM',title:'Nadchodzi pobranie',comment:'U Wiśniewskiego dziś wypada cykliczne pobranie. Fielvio uruchamia je automatycznie na <b>Twoim Stripe</b> — 0% prowizji od bramki, 100% trafia do Ciebie.'},
+   {screen:'w-billing',flash:'#invZ',title:'Faktura wystawia się sama',comment:'Płatność przeszła → faktura wychodzi <b>bez Twojego udziału</b>. Treść jest z umowy (zatwierdzona raz przy zakładaniu subskrypcji), więc nie ma „bramki" przy każdej fakturze. Idzie mailem do klienta.',anlg:'wzór: Moneybird — rób jak najmniej sam'},
+   {screen:'w-pulpit',title:'Na Pulpicie nic nie przybyło',comment:'Skoro poszło gładko, nie masz nic do zrobienia. Pulpit pokazuje tylko wyjątki — normalne pobrania i faktury zostają w tle. To jest cała obietnica: „wszystko ogarnięte".'}
+ ]},
+
+ s3:{k:'S3',freq:'Często',title:'Przegląd wykonany (z Serwis Plannera)',
+   desc:'Technik kończy zlecenie w SP — Fielvio zamienia to w kubełek, wpis do paszportu i kolejny termin.',steps:[
+   {screen:'x-wykonanie',title:'Sygnał „wykonane" z SP',comment:'Technik zamknął zlecenie w Serwis Plannerze. Fielvio <b>nie zbiera danych w terenie</b> — bierze sygnał i dowód (protokół, zdjęcia) prosto stąd. Nie ma trybu offline; źródłem prawdy jest SP.'},
+   {screen:'x-wykonanie',flash:'#xActions',title:'Trzy rzeczy po sygnale',comment:'Po sygnale Fielvio: <b>zalicza kubełek „przegląd"</b> (per wizyta — pompa 2×/rok, więc połowa), <b>dopisuje dowód do paszportu</b> i <b>ustawia kolejny termin</b>. Uwaga: to <b>nie wystawia faktury</b> — fakturę robi pobranie, nie wykonanie. To dwie różne rzeczy.'},
+   {screen:'k-passport',flash:'#histTop',title:'Wpis w paszportzie klienta',comment:'Klient widzi nowy wpis — protokół i zdjęcia — przez magic link, bez logowania. To jego <b>dowód gwarancyjny i ustawowy</b>. Trzymamy go, żeby przy sporze albo kontroli nic nie zginęło.'}
+ ]},
+
+ s4:{k:'S4',freq:'Często',title:'Nieudana karta → odzysk i termin',
+   desc:'Karta odrzucona to nie rezygnacja. Odzyskujemy płatność i pilnujemy, by termin nie przepadł.',steps:[
+   {screen:'w-subs',spot:'#subNowak',title:'Płatność nieudana',comment:'Karta klienta została odrzucona przy pobraniu. <b>To nie jest rezygnacja</b> — uruchamiamy odzysk, zanim ktokolwiek cokolwiek anuluje.',anlg:'wzór: Stripe'},
+   {screen:'w-billing',flash:'#invNowak',title:'Smart Retries + odświeżanie kart',comment:'System ponawia pobranie <b>inteligentnie</b> (do ~8 prób przez 2 tygodnie) i po cichu <b>odświeża wygasłe karty</b> (Card Account Updater). Miękka odmowa → ciche ponowienie; twarda → uprzejma prośba o nową kartę (e-mail → SMS → w aplikacji).'},
+   {screen:'w-sub-detail',flash:'#detBanner',title:'Pauza, nie kasowanie',comment:'Jeśli odzysk się nie uda: subskrypcja idzie w <b>pauzę</b>, nie kasujemy. Dane zostają, link do karty żyje 30–90 dni. Klient może wrócić bez straty historii.'},
+   {screen:'w-pulpit',spot:'#aiTermin',title:'Powiadomienie o terminie',comment:'Najważniejsze — <span class="w">to nasze DNA</span>: przy pauzie <b>powiadamiamy Cię, że urządzeniu grozi przekroczenie terminu</b> gwarancyjnego lub ustawowego. Ta czerwona sprawa ląduje na Pulpicie, żeby termin nie przepadł po cichu.'}
+ ]},
+
+ s5:{k:'S5',freq:'Rzadko',title:'Rezygnacja przed przeglądem → zwrot',
+   desc:'Klient odchodzi zanim wykorzystał przegląd. Liczymy, ile realnie dostał, i zwracamy resztę.',steps:[
+   {screen:'k-selfservice',state:{ss:'manage'},spot:'#lnkCancel',title:'Klient wchodzi w samoobsługę',comment:'Klient zarządza subskrypcją przez magic link — może zmienić kartę albo wstrzymać. Rezygnacja jest <b>cichym linkiem</b>, nie wielkim przyciskiem: nie zachęcamy do odejścia.'},
+   {screen:'k-selfservice',state:{ss:'save'},spot:'#btnContinueCancel',title:'Najpierw ścieżka „save"',comment:'Zanim pokażemy rozliczenie, proponujemy <b>pauzę zamiast rezygnacji</b>. W subskrypcjach to odzyskuje 10–15% odejść. Załóżmy jednak, że klient chce iść dalej.',anlg:'wzór: Recharge — ścieżki „save"'},
+   {screen:'k-selfservice',state:{ss:'settle'},flash:'#bignum',title:'Wynik przed matematyką',comment:'Skutek pokazujemy dopiero po decyzji — i od razu <b>wynik, nie wzór</b>: „ZWROT 46,66 zł". Przegląd w tym roku niewykonany, więc oddajemy nadpłaconą opiekę. Formuła jest schowana pod „Jak policzyliśmy?".'},
+   {screen:'w-cancels',state:{ssCase:'refund'},spot:'#btnSettle',title:'Wykonawca wykonuje zwrot',comment:'Po Twojej stronie rozliczenie czeka <b>„jednym ruchem"</b>. Fielvio policzył i pokazał obu stronom; sam zwrot robisz na swoim Stripe. Fielvio zostaje poza pieniędzmi.'}
+ ]},
+
+ s6:{k:'S6',freq:'Rzadko',title:'Rezygnacja po przeglądzie → dopłata (R7)',
+   desc:'Klient odchodzi po wykorzystaniu przeglądu na cyklu miesięcznym — powstaje dopłata i ryzyko jej ściągnięcia.',steps:[
+   {screen:'k-selfservice',state:{ss:'settle',ssCase:'surcharge'},flash:'#bignum',title:'Tym razem: dopłata',comment:'Ten sam mechanizm, ale klient rezygnuje <b>po</b> wykonanym przeglądzie, na cyklu <b>miesięcznym</b>. Wynik jest odwrotny: „DOPŁATA 117 zł". Klient dopłaca do wartości przeglądu, którego już użył — <b>nigdy za przyszłą opiekę</b>.'},
+   {screen:'w-cancels',state:{ssCase:'surcharge'},spot:'#btnSettle',title:'Pobranie dopłaty',comment:'Dopłatę pobierasz z <b>karty na pliku</b> — klient ją tam zostawił przy zapisie. Fielvio przygotował kwotę; ruch robisz na swoim Stripe.'},
+   {screen:'w-cancels',state:{ssCase:'surcharge',calcOpen:true},flash:'#calcBox',title:'Ryzyko R7',comment:'Tu jest jedyne realne ryzyko: na cyklu miesięcznym klient <b>może odmówić</b> dopłaty → zostaje windykacja. <span class="w">Cykl roczny to ryzyko eliminuje</span> (pieniądze są z góry). Dlatego roczny warto promować — a na miesięcznym planować przegląd później w roku.'}
+ ]},
+
+ s7:{k:'S7',freq:'Rzadko',title:'Faktura z anomalią → zatwierdzenie',
+   desc:'Faktura odbiega od planu — system ją łapie, a Ty potwierdzasz jednym tapnięciem.',steps:[
+   {screen:'w-pulpit',spot:'#aiAnomalia',title:'Anomalia na Pulpicie',comment:'Zwykle faktury idą same. Ale ta odbiega od planu — <b>55 zł zamiast 49 zł</b>. Kontrola anomalii ją złapała i wstrzymała przed wysyłką. Tylko taki wyjątek trafia na Pulpit.'},
+   {screen:'w-billing',spot:'#btnApprove',title:'Potwierdzasz, nie liczysz',comment:'Widzisz różnicę wprost. Jednym tapnięciem <b>zatwierdzasz kwotę z planu</b> albo wstrzymujesz do korekty. Nie przeliczasz nic ręcznie — decydujesz tylko o odchyleniu.',anlg:'wzór: Moneybird — potwierdzasz, nie liczysz'},
+   {screen:'w-billing',flash:'#invZ',title:'Faktura poszła',comment:'Zatwierdzone → faktura wysłana. Silnik wystawia, kontrola anomalii pilnuje, a Ty dotykasz tylko wyjątków. Reszta dzieje się bez Ciebie.'}
+ ]},
+
+ s8:{k:'S8',freq:'Bardzo rzadko',title:'Bramka: Stripe niepodłączony',
+   desc:'Próba wysłania linku bez płatności — bramka bezpieczeństwa, która chroni przed „pustą" subskrypcją.',steps:[
+   {screen:'w-new-sub',state:{guard:'stripe'},flash:'#guardBox',title:'Blokada wysyłki linku',comment:'Próbujesz wysłać link zapisu, ale <b>Stripe nie jest podłączony</b>. Bez niego nie ma pierwszego pobrania — więc blokujemy z góry, zamiast pozwolić powstać subskrypcji, której nie da się rozliczyć.',anlg:'wzór: Stripe/Recharge — twarde bramki'},
+   {screen:'w-settings',state:{intStripe:false},spot:'#btnStripe',title:'Prowadzimy do podłączenia',comment:'Zamiast błędu — konkretna droga naprawy: prosto do podłączenia Stripe. Trudne konfiguracje robimy <b>„za Ciebie" (concierge)</b>, a krok można pominąć i wrócić.'}
+ ]},
+
+ s9:{k:'S9',freq:'Bardzo rzadko',title:'Bramka: duplikat subskrypcji',
+   desc:'Próba założenia drugiej subskrypcji na to samo urządzenie — twarda blokada przed podwójnym obciążeniem.',steps:[
+   {screen:'w-new-sub',state:{guard:'dup'},flash:'#guardBox',title:'Blokada duplikatu',comment:'Zakładasz subskrypcję na urządzenie, które <b>już ma aktywną</b>. Twardy strażnik blokuje drugą na tę samą parę klient+urządzenie — zero podwójnych obciążeń i zdublowanych faktur.',anlg:'wzór: Recharge/Shopify'},
+   {screen:'w-subs',flash:'#subZielinski',title:'Wracasz do istniejącej',comment:'Odsyłamy Cię do subskrypcji, która już istnieje. Znacznik źródła (SP/ręczne) zostaje; <b>łączenie zdublowanych kartotek robimy później</b>, nie na starcie — żeby nie mieszać danych w pilotażu.'}
+ ]}
+};
+
+/* ===== PICKER ===== */
+function buildPicker(){
+  var el=document.getElementById('picker'),h='';
+  Object.keys(SCENARIOS).forEach(function(id){
+    var s=SCENARIOS[id],first=id==='s1';
+    h+='<button class="scard" onclick="startScenario(\''+id+'\')">'
+     +'<div class="sh"><span class="sk">'+s.k+'</span><span class="st">'+s.title+'</span><span class="freq '+(first?'f1':'')+'">'+s.freq+'</span></div>'
+     +'<div class="sd">'+s.desc+'</div><div class="run">▶ Uruchom ('+s.steps.length+' kroków)</div></button>';
+  });
+  el.innerHTML=h;
+}
+buildPicker();
+
+/* deep-link: #s1..#s9 otwiera scenariusz */
+(function(){var m=(location.hash||'').replace('#','');if(SCENARIOS[m])startScenario(m);})();
+</script>
+</body>
+</html>
