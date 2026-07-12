@@ -109,7 +109,7 @@ h2{font-size:clamp(23px,6.1vw,27px);font-weight:800;line-height:1.2;letter-spaci
 .item{padding:15px 0}
 .item + .item{border-top:1px solid var(--line)}
 .item h3{font-size:16px;font-weight:700;letter-spacing:-.015em;margin-bottom:3px;display:flex;gap:9px;align-items:center}
-.badge{width:19px;height:19px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.badge{width:20px;height:20px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
 .badge.no{background:var(--loss-bg);color:var(--loss)}
 .badge.yes{background:var(--gain-bg);color:var(--gain)}
 .item p{font-size:14.5px;color:var(--body);line-height:1.5;padding-left:28px}
@@ -128,13 +128,20 @@ h2{font-size:clamp(23px,6.1vw,27px);font-weight:800;line-height:1.2;letter-spaci
 .pr-foot{font-size:13.5px;color:var(--soft);text-align:center;margin-top:14px}
 
 .srcs{display:grid;gap:8px}
-.src{background:var(--white);border-radius:var(--r);box-shadow:var(--sh-sm);padding:13px 15px;display:flex;gap:12px;align-items:baseline}
-.src-k{font-size:15px;font-weight:800;color:var(--blue-txt);white-space:nowrap;letter-spacing:-.02em}
+.src{background:var(--white);border-radius:var(--r);box-shadow:var(--sh-sm);padding:13px 15px;display:flex;gap:12px;align-items:flex-start}
+.src-k{font-size:15px;font-weight:800;color:var(--blue-txt);white-space:nowrap;letter-spacing:-.02em;min-width:56px;line-height:1.25}
 .src-v{font-size:13.5px;color:var(--body);line-height:1.45}
+.src-v b{color:var(--ink);font-weight:700}
 
 .final{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh);padding:26px 20px;text-align:center}
 .final h2{margin-bottom:10px}
-.final p{font-size:15.5px;color:var(--body);margin-bottom:20px;line-height:1.55}
+.final p{font-size:15.5px;color:var(--body);margin-bottom:18px;line-height:1.55}
+.deal{text-align:left;background:var(--canvas);border-radius:var(--r);padding:6px 14px;margin-bottom:18px}
+.deal-row{display:flex;gap:10px;align-items:flex-start;padding:11px 0;font-size:14.5px;color:var(--body);line-height:1.45}
+.deal-row + .deal-row{border-top:1px solid var(--line)}
+.deal-row b{color:var(--ink);font-weight:700}
+.deal-i{width:19px;height:19px;border-radius:6px;flex:none;background:var(--gain-bg);color:var(--gain);
+        display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;margin-top:1px}
 footer{padding:4px 0 40px}
 footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
 .social{display:flex;gap:8px;margin-bottom:18px}
@@ -169,7 +176,7 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
     <span class="chip"><i>✓</i> Ocena pilności</span>
     <span class="chip"><i>✓</i> Kwit do systemu lub PDF</span>
   </div>
-  <p class="lede">Nie „nagra wiadomość" — <b>wypełni kartę przyjęcia i wpisze zlecenie tam, gdzie je trzymasz.</b> Płacisz, gdy auto przyjedzie.</p>
+  <p class="lede">Nie nagrywa wiadomości — <b>wypełnia kartę przyjęcia i wpisuje zlecenie tam, gdzie je trzymasz.</b></p>
 
   <div class="card">
     <div class="ctrl">
@@ -200,7 +207,7 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
       <div class="bd-row hi"><span>Nasza faktura</span><span class="num" id="r3">1 274 zł</span></div>
     </div>
 
-    <p class="rule"><b>Płacisz tylko za zlecenia, na które klient przyjechał.</b> Nie przyjechał albo recepcja odebrała pierwsza — nie płacisz. Każdą rozmowę odsłuchasz.</p>
+    <p class="rule"><b>Płacisz za zlecenie od nowego klienta i za obsługę tych, których już masz.</b> Jeśli zlecenie nie dojdzie do skutku — obniżamy fakturę o tę pozycję.</p>
   </div>
 
   <a href="#kontakt" class="btn hero-cta">Sprawdź to na swoim billingu</a>
@@ -210,30 +217,30 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
 <section id="jak">
   <div class="wrap">
     <p class="sec-eyebrow">Co robi recepcja</p>
-    <h2>Pięć rzeczy, za które płacisz. Trzy, za które nie.</h2>
+    <h2>Co dokładnie robi</h2>
 
     <div class="step">
       <div class="step-n">1</div>
       <div>
         <h3>Robi wywiad jak doradca</h3>
-        <p>Marka, model, rocznik, przebieg, objaw, od kiedy. Wchodzi po czterech sygnałach, przy zajętej linii i po godzinach.<br>
+        <p>Marka, model, rocznik, przebieg, objaw, od kiedy. Wchodzi, gdy nikt nie odbiera, gdy linia jest zajęta i po godzinach.<br>
         <b>Masz system warsztatowy?</b> Zlecenie ląduje w nim gotowe.<br>
         <b>Nie masz?</b> Dostajesz mailem kartę przyjęcia w PDF — z oznaczeniem pilności: <span style="color:var(--loss);font-weight:700">PILNE</span> · <span style="color:#B45309;font-weight:700">DZIŚ</span> · <span style="color:var(--gain);font-weight:700">DO UMÓWIENIA</span>.<br>
-        <b>49 zł — ale dopiero gdy auto przyjedzie.</b></p>
+        <b>49 zł</b>, jeśli dzwoni ktoś nowy. <b>2 zł</b>, jeśli to Twój stały klient.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-n">2</div>
       <div>
         <h3>Odpowiada „czy auto gotowe”</h3>
-        <p>Czyta status z Twojego systemu, podaje godzinę odbioru, wysyła SMS. <b>1,49 zł</b> za załatwioną sprawę. Rozmowa dłuższa niż 4 minuty? Przełącza do Ciebie — i nie liczy nic.</p>
+        <p>Czyta status z Twojego systemu, podaje godzinę odbioru, wysyła SMS. <b>2 zł</b> za załatwioną sprawę. Rozmowa dłuższa niż cztery minuty trafia do Ciebie i nie kosztuje nic — bo jeśli pytanie o auto ciągnie się cztery minuty, to nie jest pytanie o auto.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-n">3</div>
       <div>
         <h3>Wydzwania Twoją bazę</h3>
-        <p>Przegląd za dwa tygodnie. Opony w październiku. Klocki, których pół roku temu klient nie chciał wymienić. <b>29 zł — znów tylko gdy auto przyjedzie.</b></p>
+        <p>Przegląd za dwa tygodnie. Opony w październiku. Klocki, których pół roku temu klient nie chciał wymienić. <b>29 zł</b> za odzyskane zlecenie.</p>
       </div>
     </div>
     <div class="step">
@@ -247,16 +254,16 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
       <div class="step-n">5</div>
       <div>
         <h3>Prosi o opinię po odbiorze auta</h3>
-        <p>SMS z linkiem do Google, dzień po wizycie. <b>0,49 zł</b> — tylko gdy opinia faktycznie się pojawi.</p>
+        <p>SMS z linkiem do Google, dzień po wizycie. <b>0,49 zł</b>, tylko gdy opinia faktycznie się pojawi.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-n">✱</div>
       <div>
-        <h3>I trzy rzeczy, za które nie bierzemy nic</h3>
-        <p><b>Wykrywa awarię.</b> „Dymi spod maski”, „hamulce nie trzymają” — dzwoni do Ciebie natychmiast, nie umawia na czwartek.<br>
-        <b>Mówi po ukraińsku i angielsku.</b> Sam rozpoznaje język.<br>
-        <b>Działa bez integracji.</b> Nie masz systemu z API? Zlecenie przychodzi SMS-em i do kalendarza Google. Statusy dołożymy później.</p>
+        <h3>Trzy rzeczy bez opłaty</h3>
+        <p><b>Integracja z Twoim systemem.</b> Wpinamy się w to, czego już używasz. Bez opłaty wdrożeniowej, bez faktury za konfigurację.<br>
+        <b>Nie masz systemu?</b> Działa i tak. Zlecenie przychodzi SMS-em i do kalendarza Google, a karta przyjęcia mailem w PDF.<br>
+        <b>Mówi po ukraińsku i angielsku.</b> Sam rozpoznaje język rozmówcy.</p>
       </div>
     </div>
 
@@ -267,36 +274,36 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
       <div class="msg bot">Podaj numer rejestracyjny, sprawdzę.</div>
       <div class="plate-row"><span class="plate"><i>PL</i><b>WX 4821K</b></span></div>
       <div class="msg bot">Naprawa skończona o 16:10. Do odbioru dziś do 18:00. Wysłać SMS z podsumowaniem?</div>
-      <p class="chat-foot">Ta rozmowa kosztowała Cię <b>1,49 zł</b> — i możesz jej posłuchać w panelu. Gdyby doradca ją odebrał, nie naliczylibyśmy nic.</p>
+      <p class="chat-foot">To stały klient, więc ta rozmowa kosztowała <b>2 zł</b>. Możesz jej posłuchać w panelu.</p>
     </div>
   </div>
 </section>
 
 <section id="dostajesz">
   <div class="wrap">
-    <p class="sec-eyebrow">Zanim zapytasz</p>
-    <h2>Cztery rzeczy, które zabezpieczają Twój tyłek</h2>
+    <p class="sec-eyebrow">Jak się rozliczamy</p>
+    <h2>Cztery rzeczy, o które i tak zapytasz</h2>
 
     <div class="box">
       <div class="item">
-        <h3><span class="badge yes">✓</span> Nagranie do każdej pozycji na fakturze</h3>
-        <p>Wystawiliśmy 49 zł? Odsłuchasz tę rozmowę. Nie zgadzasz się — jednym kliknięciem zdejmujesz pozycję z faktury. Bez dyskusji.</p>
+        <h3><span class="badge yes">1</span> Bot wie, kto jest nowym klientem</h3>
+        <p>Na start wgrywamy do systemu Twoją bazę klientów. Bot rozpoznaje numer telefonu.<br>
+        Dzwoni ktoś spoza bazy — to nowy klient. <b>49 zł za zlecenie.</b><br>
+        Dzwoni ktoś, kogo już masz — to obsługa. <b>2 zł za załatwioną sprawę.</b></p>
       </div>
       <div class="item">
-        <h3><span class="badge yes">✓</span> Twój limit miesięczny</h3>
-        <p>Ustawiasz maksimum, np. 1 500 zł. Po przekroczeniu asystent dalej odbiera, ale my nie naliczamy ani grosza więcej.</p>
+        <h3><span class="badge yes">2</span> Gwarancja wyniku</h3>
+        <p>Bot umówił zlecenie, ale klient nie przyjechał albo naprawa nie doszła do skutku? <b>Obniżamy fakturę o tę pozycję.</b> Płacisz za wykonaną robotę, nie za rezerwację w kalendarzu.</p>
       </div>
       <div class="item">
-        <h3><span class="badge yes">✓</span> Pierwszych 5 zleceń gratis</h3>
-        <p>Pięć pierwszych zleceń, które asystent umówi, nie kosztuje Cię nic. Zobaczysz je w kalendarzu, odsłuchasz rozmowy — i dopiero wtedy zaczniesz płacić. <b>Nie umówi pięciu? Nie masz czego płacić.</b> Do tego przez pierwszy miesiąc mierzymy Twój billing i dajemy Ci raport — też za darmo.</p>
+        <h3><span class="badge yes">3</span> Zasady dowodu ustalamy razem</h3>
+        <p>Każdy warsztat pracuje inaczej, więc dogadujemy to na starcie.<br>
+        <b>Masz system warsztatowy?</b> Pobieramy z niego informację, czy zlecenie zostało zrealizowane. Nie musisz nic robić.<br>
+        <b>Nie masz systemu?</b> Masz gwarancję. Zgłoś pozycję, która nie doszła do skutku — skorygujemy fakturę razem.</p>
       </div>
       <div class="item">
-        <h3><span class="badge yes">✓</span> Umówił, ale klient nie przyjechał? Nie płacisz</h3>
-        <p>Rozliczamy zlecenia, które doszły do skutku — nie rezerwacje. Dzięki temu asystent nie ma żadnego powodu, żeby wpychać Ci do kalendarza kogokolwiek.</p>
-      </div>
-      <div class="item">
-        <h3><span class="badge yes">✓</span> Nie płacisz za swoich stałych klientów</h3>
-        <p>49 zł jest tylko za nowe zlecenie z połączenia, którego nikt u Ciebie nie odebrał. Za obsługę kogoś, kto już jest w Twojej bazie, płacisz 1,29 zł.</p>
+        <h3><span class="badge yes">4</span> Nagranie do każdej pozycji</h3>
+        <p>Za każde 49 zł na fakturze możesz odsłuchać rozmowę, z której to zlecenie wyszło.</p>
       </div>
     </div>
   </div>
@@ -306,12 +313,12 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
   <div class="wrap">
     <p class="sec-eyebrow">Uczciwie</p>
     <h2>Czego ten asystent nie zrobi</h2>
-    <p class="intro">Nie będę Ci wciskał, że zastąpi doradcę. Nie zastąpi.</p>
+    <p class="intro">Nie zastąpi doradcy i nie będę udawał, że zastąpi.</p>
 
     <div class="box">
       <div class="item">
         <h3><span class="badge no">✕</span> Nie odbierze przed Tobą</h3>
-        <p>Wchodzi po czterech sygnałach albo kiedy linia jest zajęta. Odbierasz — asystent milczy.</p>
+        <p>Wchodzi tylko wtedy, gdy nikt nie odbiera albo linia jest zajęta, bo rozmawiasz z kimś innym. Odbierasz — asystent milczy.</p>
       </div>
       <div class="item">
         <h3><span class="badge no">✕</span> Nie zdiagnozuje auta przez telefon</h3>
@@ -319,7 +326,7 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
       </div>
       <div class="item">
         <h3><span class="badge no">✕</span> Nie dogada się z każdym</h3>
-        <p>Jak nie ogarnie sprawy — przełącza do Ciebie. I nie liczy za to ani grosza.</p>
+        <p>Jeśli nie poradzi sobie ze sprawą, przełącza do Ciebie i nie nalicza za to nic.</p>
       </div>
       <div class="item">
         <h3><span class="badge no">✕</span> Nie zadzwoni do Twojej bazy bez zgody</h3>
@@ -334,7 +341,7 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
     <div class="honest">
       <h3>I jeszcze jedno</h3>
       <p>Nie pokażę Ci case study z Polski, bo jeszcze go nie mam. Jesteśmy nowi. Wolę Ci to powiedzieć teraz, niż podrzucić wymyśloną opinię „Pana Marka z Radomia”.</p>
-      <p>Szukam kilku warsztatów, które sprawdzą to ze mną na swoich liczbach. Dlatego pierwszych pięć zleceń jest gratis — ryzyko jest po mojej stronie, nie po Twojej.</p>
+      <p>Szukam kilku warsztatów, które sprawdzą to ze mną na swoich liczbach. Nie płacisz z góry, a z umowy wychodzisz w każdej chwili — bez okresu wypowiedzenia. Ryzyko jest po mojej stronie, nie po Twojej.</p>
     </div>
   </div>
 </section>
@@ -347,15 +354,15 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
     <div class="box">
       <div class="pr">
         <div class="pr-amt">49 zł</div>
-        <div class="pr-txt"><strong>Nowe zlecenie — gdy auto przyjedzie</strong><span>Nie za lead. Nie za rozmowę. Nie za rezerwację. Za auto na podnośniku.</span></div>
+        <div class="pr-txt"><strong>Zlecenie od nowego klienta</strong><span>Kogoś, kogo nie ma w Twojej bazie. Bot przyjął zlecenie, auto przyjechało.</span></div>
       </div>
       <div class="pr">
         <div class="pr-amt">29 zł</div>
-        <div class="pr-txt"><strong>Zlecenie z Twojej bazy — gdy auto przyjedzie</strong><span>Przegląd, opony, naprawa, której klient wcześniej odmówił.</span></div>
+        <div class="pr-txt"><strong>Zlecenie odzyskane z Twojej bazy</strong><span>Bot zadzwonił i przypomniał o przeglądzie, oponach albo odłożonej naprawie.</span></div>
       </div>
       <div class="pr">
-        <div class="pr-amt">1,49 zł</div>
-        <div class="pr-txt"><strong>Załatwiona sprawa</strong><span>„Czy auto gotowe”, godziny, cena, przełożenie terminu. Powyżej 4 minut przełącza do Ciebie i nie liczy nic.</span></div>
+        <div class="pr-amt">2 zł</div>
+        <div class="pr-txt"><strong>Obsługa klienta, którego już masz</strong><span>„Czy auto gotowe”, godziny, cena, przełożenie terminu. Rozmowa do czterech minut.</span></div>
       </div>
       <div class="pr">
         <div class="pr-amt">0,49 zł</div>
@@ -363,24 +370,30 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
       </div>
       <div class="pr">
         <div class="pr-amt">0,29 zł</div>
-        <div class="pr-txt"><strong>SMS ze statusem, zanim klient zadzwoni</strong><span>Mniej telefonów u Ciebie. Mniej rozmów u nas.</span></div>
+        <div class="pr-txt"><strong>SMS o statusie naprawy</strong><span>Wysyłany zanim klient zdąży zadzwonić.</span></div>
       </div>
       <div class="pr">
         <div class="pr-amt z">0 zł</div>
-        <div class="pr-txt"><strong>Klient nie przyjechał. Rozmowa dłuższa niż 4 minuty. Nieudana rozmowa. Wykryta awaria. Ukraiński. Abonament. Wdrożenie. Minuty.</strong><span>Żadnej opłaty stałej. Żadnej umowy na rok.</span></div>
+        <div class="pr-txt"><strong>Rozmowa dłuższa niż cztery minuty</strong><span>Bot przekierowuje ją do warsztatu. Jeśli sprawa ciągnie się cztery minuty, to nie jest pytanie o godziny otwarcia — i wtedy powinieneś być tam Ty, nie on.</span></div>
       </div>
-      <p class="pr-foot">To jest cały cennik. Nie ma gwiazdek.</p>
+      <div class="pr">
+        <div class="pr-amt z">0 zł</div>
+        <div class="pr-txt"><strong>Abonament, wdrożenie, integracja, minuty, rozmowa po ukraińsku</strong><span>Umowa jest, ale bez okresu wypowiedzenia i bez opłaty stałej. Rezygnujesz, kiedy chcesz.</span></div>
+      </div>
+      <p class="pr-foot">To jest cały cennik.</p>
   </div>
 </section>
 
 <section id="skad">
   <div class="wrap">
     <p class="sec-eyebrow">Skąd te liczby</p>
-    <h2>Nie wymyśliłem ich.</h2>
+    <h2>Z polskich badań, nie z folderu.</h2>
     <div class="srcs">
+      <div class="src"><span class="src-k">30%</span><span class="src-v">polskich firm <b>w ogóle nie odbiera</b> telefonów od klientów. Badanie <b>Fachowcy.pl</b> na małych i średnich firmach. To nie jest problem Twojego warsztatu — to jest problem całego rynku.</span></div>
+      <div class="src"><span class="src-k">2 razy</span><span class="src-v">tyle razy klient próbuje się dodzwonić. Potem szuka kogoś innego. <b>BT Business</b>, za Ringostat. Nie ma trzeciej próby.</span></div>
+      <div class="src"><span class="src-k">100–180<br>zł/h</span><span class="src-v">realna roboczogodzina w polskim warsztacie niezależnym, zdrowa marża 25–35% — <b>Warsztatnik</b>. Dlatego marża jest suwakiem, a nie moją liczbą. Wstaw swoją.</span></div>
+      <div class="src"><span class="src-k">25%</span><span class="src-v">polskich małych firm <b>już używa AI w obsłudze klienta</b>, kolejne 28% planuje w ciągu pół roku — <b>home.pl, „Cyfrowy puls polskich MŚP 2026”</b>. Twoja konkurencja to czyta.</span></div>
       <div class="src"><span class="src-k">22 123</span><span class="src-v">aktywne warsztaty w Polsce, 93% niezależnych — <b>GiPA / Q Service Castrol</b></span></div>
-      <div class="src"><span class="src-k">75%</span><span class="src-v">dzwoniących, którzy trafili na pocztę głosową, nigdy nie oddzwania — <b>Numa</b>, dane z setek serwisów w USA. Tam serwis traci 300–500 połączeń <i>tygodniowo</i>. Twój warsztat to nie salon dealerski — dlatego liczbę zleceń trzymam nisko.</span></div>
-      <div class="src"><span class="src-k">250 zł</span><span class="src-v">marży na zleceniu to <b>Twoja</b> liczba, nie moja. Realne stawki roboczogodziny w warsztatach niezależnych to 100–180 zł/h, zdrowa marża 25–35%. Suwak wyżej — wstaw prawdę.</span></div>
     </div>
   </div>
 </section>
@@ -388,10 +401,18 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
 <section id="kontakt">
   <div class="wrap">
     <div class="final">
-      <h2>Wyciągnij billing.<br>Reszta to 20 minut.</h2>
-      <p>Pokażesz mi, ile telefonów przepada. Policzymy to na Twoich liczbach, nie na moich. Jak nie wyjdzie — powiem wprost i się pożegnamy.</p>
+      <h2>Zadzwoń do własnego warsztatu i posłuchaj.</h2>
+      <p>W 24 godziny ustawię asystenta pod Twój cennik, godziny i marki. Dostaniesz numer, zadzwonisz i sam ocenisz, czy chciałbyś, żeby tak rozmawiał z Twoim klientem.</p>
+
+      <div class="deal">
+        <div class="deal-row"><span class="deal-i">✓</span><span><b>Demo na Twoim cenniku</b> — w 24 godziny, bez opłaty</span></div>
+        <div class="deal-row"><span class="deal-i">✓</span><span><b>Przejrzymy Twój billing</b> i policzymy, ile telefonów faktycznie przepada</span></div>
+        <div class="deal-row"><span class="deal-i">✓</span><span><b>20 minut rozmowy</b>, bez prezentacji i bez slajdów</span></div>
+        <div class="deal-row"><span class="deal-i">✓</span><span><b>Jeśli liczby nie wyjdą</b> — powiem to wprost i się pożegnamy</span></div>
+      </div>
+
       <a href="https://www.linkedin.com/in/kamil-wojcik-net-dev/" target="_blank" rel="noopener" class="btn">Napisz do mnie na LinkedIn</a>
-      <p class="btn-note">Odpisuję tego samego dnia.<br>Bez umowy. Bez opłaty za start.</p>
+      <p class="btn-note">Odpisuję tego samego dnia.<br>Umowa bez okresu wypowiedzenia — rezygnujesz, kiedy chcesz.</p>
     </div>
   </div>
 </section>
@@ -402,7 +423,7 @@ footer p{font-size:12.5px;color:var(--soft);line-height:1.6}
       <a href="https://www.linkedin.com/in/kamil-wojcik-net-dev/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://www.facebook.com/kamil.wojcik.9638" target="_blank" rel="noopener">Facebook</a>
     </div>
-    <p>Ceny netto. Wyliczenia poglądowe przy 22 dniach roboczych. Odsetek nieodebranych i liczba odzyskanych zleceń to szacunki — sprawdzimy je na Twoim billingu. Pierwszych pięć zleceń jest bez opłaty.</p>
+    <p>Ceny netto. Wyliczenia poglądowe przy 22 dniach roboczych. Odsetek nieodebranych i liczba odzyskanych zleceń to szacunki — sprawdzimy je na Twoim billingu.</p>
   </div>
 </footer>
 
@@ -422,7 +443,7 @@ function calc(){
   const rev=Math.round(missed*0.14);            // opinie Google
   const jobs=jobsIn+jobsOut;
   const lost=jobs*m;
-  const bill=jobsIn*49 + jobsOut*29 + Math.round(other*1.49) + Math.round(sms*0.29) + Math.round(rev*0.49);
+  const bill=jobsIn*49 + jobsOut*29 + Math.round(other*2.00) + Math.round(sms*0.29) + Math.round(rev*0.49);
   s1.style.setProperty('--pct',((c-10)/60)*100+'%');
   s2.style.setProperty('--pct',((m-100)/500)*100+'%');
   S('v1').textContent=c;
